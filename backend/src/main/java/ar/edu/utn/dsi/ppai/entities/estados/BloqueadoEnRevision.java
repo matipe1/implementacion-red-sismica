@@ -24,8 +24,13 @@ public class BloqueadoEnRevision extends Estado {
                 cambio.setFechaHoraHasta(fechaHoraActual);
             };
         }
-        Estado rechazadoEstado = new Rechazado("Rechazado", "Evento Sismico");
-        CambioEstado rechazadoCambioEstado = new CambioEstado(fechaHoraActual, null, responsableInspeccion, rechazadoEstado);
+        Estado rechazadoEstado = Rechazado.builder().nombre("Rechazado").ambito("Evento Sismico").build();
+
+        CambioEstado rechazadoCambioEstado = CambioEstado.builder()
+                .fechaHoraDesde(fechaHoraActual)
+                .responsableInspeccion(responsableInspeccion)
+                .estado(rechazado)
+                .build();
 
         eventoSismico.agregarCambioDeEstado(rechazadoCambioEstado);
         eventoSismico.setEstadoActual(rechazadoEstado);
