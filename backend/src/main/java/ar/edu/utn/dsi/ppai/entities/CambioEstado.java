@@ -1,5 +1,6 @@
 package ar.edu.utn.dsi.ppai.entities;
 
+import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;

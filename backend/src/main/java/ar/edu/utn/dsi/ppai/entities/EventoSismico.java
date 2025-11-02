@@ -1,5 +1,6 @@
 package ar.edu.utn.dsi.ppai.entities;
 
+import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -120,11 +121,12 @@ public Boolean estaAutoDetectado() {
     }
 
     public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        setEstado(rechazado);
+        /*setEstado(rechazado);
         System.out.println("Estado seteado a rechazado");
         CambioEstado bloqueado = buscarCEActual();
         bloqueado.setFechaHoraHasta(fechaHoraActual);
-        crearCERechazado(fechaHoraActual, rechazado, responsableInspeccion);
+        crearCERechazado(fechaHoraActual, rechazado, responsableInspeccion);*/
+        estadoActual.rechazar(rechazado, fechaHoraActual, responsableInspeccion);
     }
 
     public void crearCERechazado(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
