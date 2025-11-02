@@ -121,20 +121,20 @@ public Boolean estaAutoDetectado() {
     }
 
     public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        /*setEstado(rechazado);
+        estadoActual.rechazar(rechazado, fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
         System.out.println("Estado seteado a rechazado");
-        CambioEstado bloqueado = buscarCEActual();
-        bloqueado.setFechaHoraHasta(fechaHoraActual);
-        crearCERechazado(fechaHoraActual, rechazado, responsableInspeccion);*/
-        estadoActual.rechazar(rechazado, fechaHoraActual, responsableInspeccion);
     }
 
-    public void crearCERechazado(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
-        CambioEstado bloqEnRev = new CambioEstado(fechaHoraActual, null, responsableInspeccion, estado);
+    public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
+        if (cambiosDeEstado == null) {
+            cambiosDeEstado = new ArrayList<>();
+        }
         System.out.println("Tamaño antes de agregar el ce rechazado: " + cambiosDeEstado.size());
-        cambiosDeEstado.add(bloqEnRev);
+        nuevoCambio.setEventoSismico(this); // para que persista con el JPA
+        cambiosDeEstado.add(nuevoCambio);
         System.out.println("Tamaño despues de agregar el ce rechazado: " + cambiosDeEstado.size());
     }
+
 
     public void bloquear(Estado bloqueado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         setEstado(bloqueado);
