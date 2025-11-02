@@ -1,6 +1,5 @@
 package ar.edu.utn.dsi.ppai.entities;
 
-import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -45,14 +44,14 @@ public class EventoSismico {
     private Double valorMagnitud;
 
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SerieTemporal> seriesTemporales;
+    private List<SerieTemporal> seriesTemporales = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
     private Empleado analistaSupervisor;
 
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<CambioEstado> cambiosDeEstado;
+    private List<CambioEstado> cambiosDeEstado = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_actual_id", foreignKey = @ForeignKey(name = "fk_evento_estado"))
@@ -102,7 +101,11 @@ public Boolean estaAutoDetectado() {
     }
 
     public void crearCEBloqueadoEnRevision(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
-        CambioEstado bloqEnRev = new CambioEstado(fechaHoraActual, null, null, estado);
+        CambioEstado bloqEnRev = CambioEstado.builder()
+                                    .fechaHoraDesde(fechaHoraActual)
+                                    .responsableInspeccion(responsableInspeccion)
+                                    .estado(estado)
+                                    .build();
         System.out.println("Tamaño antes de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
         cambiosDeEstado.add(bloqEnRev);
         System.out.println("Tamaño despues de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
@@ -121,20 +124,23 @@ public Boolean estaAutoDetectado() {
     }
 
     public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        estadoActual.rechazar(rechazado, fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+        setEstado(rechazado);
         System.out.println("Estado seteado a rechazado");
+        CambioEstado bloqueado = buscarCEActual();
+        bloqueado.setFechaHoraHasta(fechaHoraActual);
+        crearCERechazado(fechaHoraActual, rechazado, responsableInspeccion);
     }
 
-    public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
-        if (cambiosDeEstado == null) {
-            cambiosDeEstado = new ArrayList<>();
-        }
+    public void crearCERechazado(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
+        CambioEstado bloqEnRev = CambioEstado.builder()
+                                    .fechaHoraDesde(fechaHoraActual)
+                                    .responsableInspeccion(responsableInspeccion)
+                                    .estado(estado)
+                                    .build();
         System.out.println("Tamaño antes de agregar el ce rechazado: " + cambiosDeEstado.size());
-        nuevoCambio.setEventoSismico(this); // para que persista con el JPA
-        cambiosDeEstado.add(nuevoCambio);
+        cambiosDeEstado.add(bloqEnRev);
         System.out.println("Tamaño despues de agregar el ce rechazado: " + cambiosDeEstado.size());
     }
-
 
     public void bloquear(Estado bloqueado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         setEstado(bloqueado);

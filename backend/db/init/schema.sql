@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS serie_temporal (
     alerta_alarma BOOLEAN NOT NULL, -- deberia ser not null ?
     evento_sismico_id BIGINT,
     sismografo_id BIGINT,
-    CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE
+    CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE,
     CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_id) REFERENCES sismografo(id)
 );
 
