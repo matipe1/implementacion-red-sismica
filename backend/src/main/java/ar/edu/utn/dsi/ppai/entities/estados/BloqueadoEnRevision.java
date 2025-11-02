@@ -5,12 +5,14 @@ import ar.edu.utn.dsi.ppai.entities.Empleado;
 import ar.edu.utn.dsi.ppai.entities.EventoSismico;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("BLOQUEADO_EN_REVISION")
+@NoArgsConstructor
 public class BloqueadoEnRevision extends Estado {
 
     public BloqueadoEnRevision(String nombre) {
