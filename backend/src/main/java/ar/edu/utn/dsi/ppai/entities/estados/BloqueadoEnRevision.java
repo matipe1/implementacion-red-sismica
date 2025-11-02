@@ -18,7 +18,7 @@ public class BloqueadoEnRevision extends Estado {
     }
 
     @Override
-    public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         for (CambioEstado cambio : cambioEstados) {
             if (cambio.sosCEActual()){
                 cambio.setFechaHoraHasta(fechaHoraActual);
@@ -29,7 +29,7 @@ public class BloqueadoEnRevision extends Estado {
         CambioEstado rechazadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)
                 .responsableInspeccion(responsableInspeccion)
-                .estado(rechazado)
+                .estado(rechazadoEstado)
                 .build();
 
         eventoSismico.agregarCambioDeEstado(rechazadoCambioEstado);

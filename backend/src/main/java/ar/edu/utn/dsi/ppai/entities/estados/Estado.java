@@ -47,7 +47,11 @@ public abstract class Estado {
         return Objects.equals(nombre, "Rechazado");
     }
 
-    public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+
+    }
+
+    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
 
     }
 }

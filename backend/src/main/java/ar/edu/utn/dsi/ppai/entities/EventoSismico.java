@@ -88,29 +88,8 @@ public Boolean estaAutoDetectado() {
         return valorMagnitud;
     }
 
-    public void setEstado(Estado estadoActual) {
-        this.estadoActual = estadoActual;
-    }
 
-    public CambioEstado buscarCEActual() {
-        for (CambioEstado ce : this.cambiosDeEstado) {
-            if (ce.sosCEActual()) {
-                return ce;
-            }
-        }
-        return null;
-    }
 
-    public void crearCEBloqueadoEnRevision(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
-        CambioEstado bloqEnRev = CambioEstado.builder()
-                                    .fechaHoraDesde(fechaHoraActual)
-                                    .responsableInspeccion(responsableInspeccion)
-                                    .estado(estado)
-                                    .build();
-        System.out.println("Tamaño antes de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
-        cambiosDeEstado.add(bloqEnRev);
-        System.out.println("Tamaño despues de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
-    }
 
     public AlcanceSismo getAlcanceSismo() {
         return alcanceSismo;
@@ -125,31 +104,27 @@ public Boolean estaAutoDetectado() {
     }
 
 
-    public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        estadoActual.rechazar(rechazado, fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
+        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
         System.out.println("Estado seteado a rechazado");
+    }
+
+    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+        estadoActual.bloquear(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+        System.out.println("Estado seteado a bloqueado");
     }
 
     public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
         if (cambiosDeEstado == null) {
             cambiosDeEstado = new ArrayList<>();
         }
-        System.out.println("Tamaño antes de agregar el ce rechazado: " + cambiosDeEstado.size());
+        System.out.println("Tamaño antes de agregar el ce: " + cambiosDeEstado.size());
         nuevoCambio.setEventoSismico(this); // para que persista con el JPA
         cambiosDeEstado.add(nuevoCambio);
-        System.out.println("Tamaño despues de agregar el ce rechazado: " + cambiosDeEstado.size());
+        System.out.println("Tamaño despues de agregar el ce: " + cambiosDeEstado.size());
     }
 
 
-
-
-    public void bloquear(Estado bloqueado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        setEstado(bloqueado);
-        System.out.println("Estado seteado a bloqueado");
-        CambioEstado autoDetectado = buscarCEActual();
-        autoDetectado.setFechaHoraHasta(fechaHoraActual);
-        crearCEBloqueadoEnRevision(fechaHoraActual, bloqueado, null);
-    }
 
     // METODO DISPARADOR DEL LOOP PARA BUSCAR LAS SERIES Y CLASIFICARLAS
     public Map<Integer, List<SerieTemporal>> obtenerSeriesTemporalesClasificadas(List<Sismografo> allSismografos) {
