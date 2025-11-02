@@ -70,7 +70,6 @@ public class EventoSismico {
     @JoinColumn(name = "alcance_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_alcance"))
     private AlcanceSismo alcanceSismo;
 
-
     public String getFechaHoraOcurrencia() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return fechaHoraOcurrencia.format(formatter);
@@ -80,22 +79,6 @@ public class EventoSismico {
         return "Epicentro: (" + latitudEpicentro + "," + longitudEpicentro + ") - "
                 + "Hipocentro: (" + latitudHipocentro + "," + longitudHipocentro + ")";
     }
-
-    // public Double getValorMagnitud() {
-    //     return valorMagnitud;
-    // }
-
-    // public AlcanceSismo getAlcanceSismo() {
-    //     return alcanceSismo;
-    // }
-
-    // public ClasificacionSismo getClasificacionSismo() {
-    //     return clasificacionSismo;
-    // }
-
-    // public OrigenDeGeneracion getOrigenDeGeneracion() {
-    //     return origenDeGeneracion;
-    // }
 
     public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
@@ -116,7 +99,6 @@ public class EventoSismico {
         cambiosDeEstado.add(nuevoCambio);
         System.out.println("Tamaño despues de agregar el ce: " + cambiosDeEstado.size());
     }
-
 
 
     // METODO DISPARADOR DEL LOOP PARA BUSCAR LAS SERIES Y CLASIFICARLAS
