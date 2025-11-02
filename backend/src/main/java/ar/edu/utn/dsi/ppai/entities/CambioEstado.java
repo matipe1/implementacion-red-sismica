@@ -36,14 +36,6 @@ public class CambioEstado {
     @ManyToOne(fetch = LAZY) @JoinColumn(name="evento_sismico_id")
     private EventoSismico eventoSismico;
 
-    public CambioEstado(LocalDateTime fechaHoraDesde, LocalDateTime fechaHoraHasta, Empleado responsableInspeccion, Estado estado) {
-        this.fechaHoraDesde = fechaHoraDesde;
-        this.fechaHoraHasta = fechaHoraHasta;
-        this.responsableInspeccion = responsableInspeccion;
-        this.estado = estado;
-    }
-
-
     public Boolean sosCEActual() {
         return this.fechaHoraHasta == null;
     }

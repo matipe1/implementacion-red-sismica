@@ -101,7 +101,11 @@ public Boolean estaAutoDetectado() {
     }
 
     public void crearCEBloqueadoEnRevision(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
-        CambioEstado bloqEnRev = new CambioEstado(fechaHoraActual, null, null, estado);
+        CambioEstado bloqEnRev = CambioEstado.builder()
+                                    .fechaHoraDesde(fechaHoraActual)
+                                    .responsableInspeccion(responsableInspeccion)
+                                    .estado(estado)
+                                    .build();
         System.out.println("Tamaño antes de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
         cambiosDeEstado.add(bloqEnRev);
         System.out.println("Tamaño despues de agregar el ce bloqueado en revision: " + cambiosDeEstado.size());
@@ -128,7 +132,11 @@ public Boolean estaAutoDetectado() {
     }
 
     public void crearCERechazado(LocalDateTime fechaHoraActual, Estado estado, Empleado responsableInspeccion) {
-        CambioEstado bloqEnRev = new CambioEstado(fechaHoraActual, null, responsableInspeccion, estado);
+        CambioEstado bloqEnRev = CambioEstado.builder()
+                                    .fechaHoraDesde(fechaHoraActual)
+                                    .responsableInspeccion(responsableInspeccion)
+                                    .estado(estado)
+                                    .build();
         System.out.println("Tamaño antes de agregar el ce rechazado: " + cambiosDeEstado.size());
         cambiosDeEstado.add(bloqEnRev);
         System.out.println("Tamaño despues de agregar el ce rechazado: " + cambiosDeEstado.size());
