@@ -1,22 +1,39 @@
 package ar.edu.utn.dsi.ppai.entities;
 
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
-
+@Entity
+@Table(name = "sismografo")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Sismografo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nro_serie", nullable = false, unique = true)
     private Integer nroSerie;
+
+    @Column(name = "identificador_sismografo", nullable = false, unique = true)
     private Integer identificadorSismografo;
-    private LocalDate fechaAdquisicion; 
+
+    @Column(name = "fecha_adquisicion", nullable = false)
+    private LocalDate fechaAdquisicion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estacion_sismologica_id", foreignKey = @ForeignKey(name = "fk_sismografo_estacion"))
     private EstacionSismologica estacionSismologica;
-    private List<SerieTemporal> seriesTemporales;
+
+    @OneToMany(mappedBy = "sismografo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SerieTemporal> seriesTemporales = new ArrayList<>();
 
     public Integer conocerCodigoEstacion() {
         return estacionSismologica.getCodigoEstacion();

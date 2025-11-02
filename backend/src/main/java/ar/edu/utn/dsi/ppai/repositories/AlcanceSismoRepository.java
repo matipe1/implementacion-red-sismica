@@ -6,6 +6,6 @@ import ar.edu.utn.dsi.ppai.entities.AlcanceSismo;
 
 // Repositorio de prueba
 @Repository
-public interface AlcanceSismoRepository extends JpaRepository<AlcanceSismo, Integer> {
+public interface AlcanceSismoRepository extends JpaRepository<AlcanceSismo, Long> {
     // Sin metodos, solo hereda los de spring boot
 }

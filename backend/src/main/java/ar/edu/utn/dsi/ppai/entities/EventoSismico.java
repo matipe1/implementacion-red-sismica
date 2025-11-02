@@ -1,36 +1,76 @@
 package ar.edu.utn.dsi.ppai.entities;
 
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.*;
 
+@Entity
+@Table(name = "evento_sismico")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class EventoSismico {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "fecha_hora_ocurrencia", nullable = false)
     private LocalDateTime fechaHoraOcurrencia;
+
+    @Column(name = "fecha_hora_fin")
     private LocalDateTime fechaHoraFin;
+
+    @Column(name = "latitud_epicentro", nullable = false)
     private Double latitudEpicentro;
+
+    @Column(name = "longitud_epicentro", nullable = false)
     private Double longitudEpicentro;
+
+    @Column(name = "latitud_hipocentro")
     private Double latitudHipocentro;
+
+    @Column(name = "longitud_hipocentro")
     private Double longitudHipocentro;
+
+    @Column(name = "valor_magnitud", nullable = false)
     private Double valorMagnitud;
+
+    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SerieTemporal> seriesTemporales;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
     private Empleado analistaSupervisor;
+
+    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CambioEstado> cambiosDeEstado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_actual_id", foreignKey = @ForeignKey(name = "fk_evento_estado"))
     private Estado estadoActual;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clasificacion_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_clasificacion"))
     private ClasificacionSismo clasificacionSismo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "origen_generacion_id", foreignKey = @ForeignKey(name = "fk_evento_origen"))
     private OrigenDeGeneracion origenDeGeneracion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "alcance_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_alcance"))
     private AlcanceSismo alcanceSismo;
 
-    public Boolean estaAutoDetectado() { 
+
+public Boolean estaAutoDetectado() {
         return (estadoActual.esAutoDetectado()); 
     }
 

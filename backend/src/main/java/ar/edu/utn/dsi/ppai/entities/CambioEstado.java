@@ -1,21 +1,50 @@
 package ar.edu.utn.dsi.ppai.entities;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
+
+@Entity
+@Table(name = "cambio_estado")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class CambioEstado {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "fecha_hora_desde", nullable = false)
     private LocalDateTime fechaHoraDesde;
+
+    @Column(name = "fecha_hora_hasta")
     private LocalDateTime fechaHoraHasta;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "responsable_inspeccion_id", foreignKey = @ForeignKey(name = "fk_cambio_estado_empleado"))
     private Empleado responsableInspeccion;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "estado_id", foreignKey = @ForeignKey(name = "fk_cambio_estado_estado"))
     private Estado estado;
 
-    public Boolean sosCEActual() { 
-        return this.fechaHoraHasta == null; 
+    @ManyToOne(fetch = LAZY) @JoinColumn(name="evento_sismico_id")
+    private EventoSismico eventoSismico;
+
+    public CambioEstado(LocalDateTime fechaHoraDesde, LocalDateTime fechaHoraHasta, Empleado responsableInspeccion, Estado estado) {
+        this.fechaHoraDesde = fechaHoraDesde;
+        this.fechaHoraHasta = fechaHoraHasta;
+        this.responsableInspeccion = responsableInspeccion;
+        this.estado = estado;
+    }
+
+
+    public Boolean sosCEActual() {
+        return this.fechaHoraHasta == null;
     }
 }
