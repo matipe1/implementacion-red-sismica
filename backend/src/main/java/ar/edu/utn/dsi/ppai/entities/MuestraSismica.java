@@ -26,7 +26,7 @@ public class MuestraSismica {
     private List<DetalleMuestraSismica> detallesMuestrasSismicas = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "id_serie_temporal")  // o el nombre real de tu FK en la base
+    @JoinColumn(name = "serie_temporal_id")
     private SerieTemporal serieTemporal;
 
     public List<DetalleMuestraSismica> obtenerDetallesMuestra() {
