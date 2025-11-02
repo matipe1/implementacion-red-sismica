@@ -22,7 +22,7 @@ public class Usuario {
     @Column(name = "contrasena", nullable = false, length = 255)
     private String contraseña;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "empleado_id", foreignKey = @ForeignKey(name = "fk_usuario_empleado"))
     private Empleado empleado;
 

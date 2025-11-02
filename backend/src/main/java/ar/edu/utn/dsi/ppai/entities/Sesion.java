@@ -20,7 +20,7 @@ public class Sesion {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_sesion_usuario"))
     private Usuario usuario;
 
