@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-redsismica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: red_sismica
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "5432:5432" # Cambia a 5433:5432 si 5432 ya está usado en tu host
+    volumes:
+      - pgdata:/var/lib/postgresql/data              # volumen de datos (persistente)
+      - ./db/init:/docker-entrypoint-initdb.d        # 01_schema.sql vivirá aquí
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d red_sismica"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
