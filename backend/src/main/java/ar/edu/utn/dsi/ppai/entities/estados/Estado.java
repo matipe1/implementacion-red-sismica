@@ -1,10 +1,13 @@
 package ar.edu.utn.dsi.ppai.entities.estados;
 
+import ar.edu.utn.dsi.ppai.entities.CambioEstado;
 import ar.edu.utn.dsi.ppai.entities.Empleado;
+import ar.edu.utn.dsi.ppai.entities.EventoSismico;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -44,7 +47,7 @@ public abstract class Estado {
         return Objects.equals(nombre, "Rechazado");
     }
 
-    public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
+    public void rechazar(Estado rechazado, LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
 
     }
 }
