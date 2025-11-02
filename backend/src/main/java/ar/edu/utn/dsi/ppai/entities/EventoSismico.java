@@ -71,11 +71,8 @@ public class EventoSismico {
     private AlcanceSismo alcanceSismo;
 
 
-public Boolean estaAutoDetectado() {
-        return (estadoActual.esAutoDetectado()); 
-    }
-
-    public String getFechaHoraOcurrencia() { DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public String getFechaHoraOcurrencia() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return fechaHoraOcurrencia.format(formatter);
     }
 
@@ -84,37 +81,33 @@ public Boolean estaAutoDetectado() {
                 + "Hipocentro: (" + latitudHipocentro + "," + longitudHipocentro + ")";
     }
 
-    public Double getValorMagnitud() {
-        return valorMagnitud;
-    }
+    // public Double getValorMagnitud() {
+    //     return valorMagnitud;
+    // }
 
+    // public AlcanceSismo getAlcanceSismo() {
+    //     return alcanceSismo;
+    // }
 
+    // public ClasificacionSismo getClasificacionSismo() {
+    //     return clasificacionSismo;
+    // }
 
-
-    public AlcanceSismo getAlcanceSismo() {
-        return alcanceSismo;
-    }
-
-    public ClasificacionSismo getClasificacionSismo() {
-        return clasificacionSismo;
-    }
-
-    public OrigenDeGeneracion getOrigenDeGeneracion() {
-        return origenDeGeneracion;
-    }
-
+    // public OrigenDeGeneracion getOrigenDeGeneracion() {
+    //     return origenDeGeneracion;
+    // }
 
     public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
-        System.out.println("Estado seteado a rechazado");
+        System.out.println("Estado seteado a 'RECHAZADO'");
     }
 
-    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         estadoActual.bloquear(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
-        System.out.println("Estado seteado a bloqueado");
+        System.out.println("Estado seteado a 'BLOQUEADO EN REVISION'");
     }
 
-    public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
+    public void agregarCambioDeEstado(CambioEstado nuevoCambio) { // cambiar por set y sacar el setter de lombok por defecto
         if (cambiosDeEstado == null) {
             cambiosDeEstado = new ArrayList<>();
         }

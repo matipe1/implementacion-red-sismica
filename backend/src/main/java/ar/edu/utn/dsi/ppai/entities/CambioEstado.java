@@ -38,6 +38,6 @@ public class CambioEstado {
     private EventoSismico eventoSismico;
 
     public Boolean sosCEActual() {
-        return this.fechaHoraHasta == null;
+        return this.fechaHoraHasta == null; // Si no tiene fecha final devuelve true
     }
 }

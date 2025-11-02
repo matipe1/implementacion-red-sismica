@@ -13,18 +13,19 @@ import java.util.List;
 @DiscriminatorValue("BLOQUEADO_EN_REVISION")
 public class BloqueadoEnRevision extends Estado {
 
-    public BloqueadoEnRevision(String nombre, String ambito) {
-        super(null, nombre, ambito); // null para el id
+    public BloqueadoEnRevision(String nombre) {
+        super(nombre);
     }
 
     @Override
     public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         for (CambioEstado cambio : cambioEstados) {
-            if (cambio.sosCEActual()){
+            if (cambio.sosCEActual()) {
                 cambio.setFechaHoraHasta(fechaHoraActual);
-            };
+            }
         }
-        Estado rechazadoEstado = Rechazado.builder().nombre("Rechazado").ambito("Evento Sismico").build();
+        
+        Estado rechazadoEstado = new Rechazado("RECHAZADO");
 
         CambioEstado rechazadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)

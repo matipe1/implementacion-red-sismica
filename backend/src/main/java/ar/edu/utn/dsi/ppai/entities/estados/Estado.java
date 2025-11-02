@@ -8,7 +8,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "estado")
@@ -17,8 +16,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public abstract class Estado {
 
     @Id
@@ -28,30 +25,27 @@ public abstract class Estado {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
-    private String ambito;
-
-    public boolean esAutoDetectado() {
-        return Objects.equals(nombre, "Autodetectado");
+    public Estado(String nombre) {
+        this.nombre = nombre;
     }
 
-    public boolean esAmbitoEventoSismico() {
-        return Objects.equals(ambito, "Evento Sismico");
-    }
-
-    public boolean esBloqueadoEnRevision() {
-        return Objects.equals(nombre, "Bloqueado en revision");
-    }
-
-    public boolean esRechazado() {
-        return Objects.equals(nombre, "Rechazado");
+    public void autodetectar() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede autodetectar desde este estado."
+        );
     }
 
     public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
-
+        throw new UnsupportedOperationException(
+            "No se puede rechazar el evento en este estado."
+        );
     }
 
     public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
-
+        throw new UnsupportedOperationException(
+            "No se puede bloquear el evento en este estado."
+        );
     }
+
+    // Probablemente faltan agregar metodos de otros estados
 }

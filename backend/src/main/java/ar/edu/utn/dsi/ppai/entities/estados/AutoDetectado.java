@@ -11,16 +11,21 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("AUTODETECTADO")
-public class AutoDetectado extends Estado{
+public class AutoDetectado extends Estado {
+
+    public AutoDetectado(String nombre) {
+        super(nombre);
+    }
 
     @Override
     public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         for (CambioEstado cambio : cambioEstados) {
-            if (cambio.sosCEActual()){
+            if (cambio.sosCEActual()) {
                 cambio.setFechaHoraHasta(fechaHoraActual);
-            };
+            }
         }
-        Estado bloqueadoEstado = BloqueadoEnRevision.builder().nombre("Bloqueado en Revision").ambito("Evento Sismico").build();
+
+        Estado bloqueadoEstado = new BloqueadoEnRevision("BLOQUEADO EN REVISION");
 
         CambioEstado bloqueadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)

@@ -6,5 +6,7 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("RECHAZADO")
 public class Rechazado extends Estado{
-
+    public Rechazado(String nombre) {
+        super(nombre);
+    }
 }
