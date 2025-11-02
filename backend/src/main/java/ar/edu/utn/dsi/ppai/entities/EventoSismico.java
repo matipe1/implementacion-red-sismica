@@ -44,14 +44,14 @@ public class EventoSismico {
     private Double valorMagnitud;
 
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SerieTemporal> seriesTemporales;
+    private List<SerieTemporal> seriesTemporales = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
     private Empleado analistaSupervisor;
 
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<CambioEstado> cambiosDeEstado;
+    private List<CambioEstado> cambiosDeEstado = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_actual_id", foreignKey = @ForeignKey(name = "fk_evento_estado"))
