@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: red_sismica
       TZ: America/Argentina/Buenos_Aires
     ports:
-      - "5432:5432" # Cambia a 5433:5432 si 5432 ya está usado en tu host
+      - "5433:5432" # Cambia a 5433:5432 si 5432 ya está usado en tu host
     volumes:
       - pgdata:/var/lib/postgresql/data              # volumen de datos (persistente)
       - ./db/init:/docker-entrypoint-initdb.d        # ejecuta todos los .sql de /db/init
