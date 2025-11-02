@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS empleado (
 CREATE TABLE IF NOT EXISTS estado (
     id BIGSERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    ambito VARCHAR(100) NOT NULL
+    ambito VARCHAR(100) NOT NULL -- deberiamos sacar ambito al implementar state
 );
 
 -- 3) CLASIFICACION_SISMO
@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     fecha_hora_fin TIMESTAMP,
     latitud_epicentro DOUBLE PRECISION NOT NULL,
     longitud_epicentro DOUBLE PRECISION NOT NULL,
-    latitud_hipocentro DOUBLE PRECISION,
-    longitud_hipocentro DOUBLE PRECISION,
+    latitud_hipocentro DOUBLE PRECISION NOT NULL,
+    longitud_hipocentro DOUBLE PRECISION NOT NULL,
     valor_magnitud DOUBLE PRECISION NOT NULL,
     analista_supervisor_id BIGINT,
     estado_actual_id BIGINT,
@@ -100,9 +100,11 @@ CREATE TABLE IF NOT EXISTS serie_temporal (
     fecha_hora_inicio_registro TIMESTAMP NOT NULL,
     frecuencia_muestreo VARCHAR(50) NOT NULL,
     fecha_hora_registro TIMESTAMP NOT NULL,
-    alerta_alarma BOOLEAN NOT NULL,
+    alerta_alarma BOOLEAN NOT NULL, -- deberia ser not null ?
     evento_sismico_id BIGINT,
+    sismografo_id BIGINT,
     CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE
+    CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_id) REFERENCES sismografo(id)
 );
 
 -- 11) MUESTRA_SISMICA
