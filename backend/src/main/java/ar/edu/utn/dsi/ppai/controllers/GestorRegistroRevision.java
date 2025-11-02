@@ -1,4 +1,14 @@
-// package ar.edu.utn.dsi.ppai.controllers;
+package ar.edu.utn.dsi.ppai.controllers;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
+import ar.edu.utn.dsi.ppai.services.ServicioRegistroRevision;
 
 // import application.InterfazRegistroRevision;
 
@@ -16,6 +26,28 @@
 // import java.util.List;
 // import java.util.Map;
 
+// GENERO NUEVAMENTE PARA NO BORRAR LO ANTERIOR Y TENERLO DE REFERENCIA
+@RestController
+@RequestMapping("/api/revisiones")
+public class GestorRegistroRevision {
+    private final ServicioRegistroRevision servicioRegistroRevision;
+
+    public GestorRegistroRevision(ServicioRegistroRevision servicioRegistroRevision) {
+        this.servicioRegistroRevision = servicioRegistroRevision;
+    }
+
+    @GetMapping("/eventos-autodetectados")
+    public ResponseEntity<List<EventoSismicoDTO>> obtenerEventosParaRevision() {
+        List<EventoSismicoDTO> eventos = servicioRegistroRevision.buscarEventosParaRevision();
+        if (eventos.isEmpty()) {
+            // Caso alternativo 1: No hay eventos
+            // Capaz debemos implementarlo con retorno de http status o algo de eso
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(eventos);
+    }
+
+}
 
 // public class GestorRegistroRevision {
 //     private static final ObservableList<EventoSismico> ALL_EVENTOS = DatosSimulados.obtenerEventosSismicos();
