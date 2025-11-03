@@ -1,13 +1,16 @@
 package ar.edu.utn.dsi.ppai.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import ar.edu.utn.dsi.ppai.entities.EventoSismico;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
+import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
 import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import ar.edu.utn.dsi.ppai.repositories.EstadoRepository;
 import ar.edu.utn.dsi.ppai.repositories.EventoSismicoRepository;
@@ -27,28 +30,36 @@ public class ServicioRegistroRevision {
         this.authService = authService;
     }
 
-    public List<EventoSismicoDTO> buscarEventosParaRevision() {
-        Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
-            .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
+    public List<EventoSismicoDTO> opcionRegistrarRevisionManual() {
+        Stream<EventoSismicoDTO> eventos = this.buscarEventosAutoDetectados();
+        return this.ordenarEventosSismicos(eventos);
+    }
 
-        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado);
-        // Caso alternativo: No hay eventos
-        if (eventos.isEmpty()) {
-            return new ArrayList<>();
-        }
-        // El caso de uso pide ordenar? podriamos meter un .sorted si lo pide
-        // creo que habia que implementar el sorted pero en un metodo...
-        return eventos.stream()
-                .map(evento -> {
+    public Stream<EventoSismicoDTO> buscarEventosAutoDetectados() {
+        Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
+                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
+
+        Stream<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado); // mas eficiente que hacer findAll y preguntarle a cada estado
+        return eventos
+            .map(evento -> {
                     return EventoSismicoDTO.builder()
                             .id(evento.getId())
                             .fechaHoraOcurrencia(evento.getFechaHoraOcurrencia())
                             .ubicacion(evento.getUbicacion())
                             .valorMagnitud(evento.getValorMagnitud())
                             .build();
-                })
-                .collect(Collectors.toList());
+                });
     }
+    
+    public List<EventoSismicoDTO> ordenarEventosSismicos(Stream<EventoSismicoDTO> eventosDesordenados) { // ordenarPorFechaHora() <-- sería más legible
+        return eventosDesordenados
+            .sorted(Comparator.comparing(EventoSismicoDTO::getFechaHoraOcurrencia))
+            .collect(Collectors.toList());
+    }
+
+    // EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId) {
+
+    // }
 
     // public void rechazarEventoSismico(Long eventoId) {
     // EventoSismico evento =

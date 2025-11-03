@@ -37,8 +37,8 @@ public class GestorRegistroRevision {
     }
 
     @GetMapping("/eventos-autodetectados")
-    public ResponseEntity<List<EventoSismicoDTO>> obtenerEventosParaRevision() {
-        List<EventoSismicoDTO> eventos = servicioRegistroRevision.buscarEventosParaRevision();
+    public ResponseEntity<List<EventoSismicoDTO>> opcionRegistrarRevisionManual() {
+        List<EventoSismicoDTO> eventos = servicioRegistroRevision.opcionRegistrarRevisionManual();
         if (eventos.isEmpty()) {
             // Caso alternativo 1: No hay eventos
             // Capaz debemos implementarlo con retorno de http status o algo de eso
@@ -46,7 +46,8 @@ public class GestorRegistroRevision {
         }
         return ResponseEntity.ok(eventos);
     }
-
+    // Post("/{id}/seleccionar") // capaz conviene asi
+    // public ResponseEntity<EventoSismicoDetalleDTO> tomarSeleccionDeEvento(); // agregar pathvariable
 }
 
 // public class GestorRegistroRevision {
