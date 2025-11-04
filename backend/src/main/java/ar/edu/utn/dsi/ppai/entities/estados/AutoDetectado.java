@@ -1,7 +1,6 @@
 package ar.edu.utn.dsi.ppai.entities.estados;
 
 import ar.edu.utn.dsi.ppai.entities.CambioEstado;
-import ar.edu.utn.dsi.ppai.entities.Empleado;
 import ar.edu.utn.dsi.ppai.entities.EventoSismico;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ public class AutoDetectado extends Estado {
     }
 
     @Override
-    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoBloqueado) {
+    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoBloqueadoEnRevision) {
         for (CambioEstado cambio : cambioEstados) {
             if (cambio.sosCEActual()) {
                 cambio.setFechaHoraHasta(fechaHoraActual);
@@ -31,10 +30,10 @@ public class AutoDetectado extends Estado {
 
         CambioEstado bloqueadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)
-                .estado(estadoBloqueado)
+                .estado(estadoBloqueadoEnRevision)
                 .build();
 
         eventoSismico.agregarCambioDeEstado(bloqueadoCambioEstado);
-        eventoSismico.setEstadoActual(estadoBloqueado);
+        eventoSismico.setEstadoActual(estadoBloqueadoEnRevision);
     }
 }
