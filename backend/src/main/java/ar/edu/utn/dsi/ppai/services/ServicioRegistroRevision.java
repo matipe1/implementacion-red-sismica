@@ -49,29 +49,7 @@ public class ServicioRegistroRevision {
         Stream<EventoSismicoDTO> eventos = this.buscarEventosAutoDetectados();
         return this.ordenarEventosSismicos(eventos);
     }
-
-    public Stream<EventoSismicoDTO> buscarEventosAutoDetectados() {
-        Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
-                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
-
-        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado);
-        return eventos.stream()
-            .map(evento -> {
-                    return EventoSismicoDTO.builder()
-                            .id(evento.getId())
-                            .fechaHoraOcurrencia(evento.getFechaHoraOcurrencia())
-                            .ubicacion(evento.getUbicacion())
-                            .valorMagnitud(evento.getValorMagnitud())
-                            .build();
-                });
-    }
     
-    public List<EventoSismicoDTO> ordenarEventosSismicos(Stream<EventoSismicoDTO> eventosDesordenados) { // ordenarPorFechaHora() <-- sería más legible
-        return eventosDesordenados
-            .sorted(Comparator.comparing(EventoSismicoDTO::getFechaHoraOcurrencia))
-            .collect(Collectors.toList());
-    }
-
     @Transactional
     public EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId) {
         EventoSismico eventoSeleccionado = eventoSismicoRepository.findById(eventoId)
@@ -80,6 +58,7 @@ public class ServicioRegistroRevision {
         try {
             this.bloquearEventoSismico(eventoSeleccionado);
             eventoSismicoRepository.save(eventoSeleccionado);
+            
         } catch (UnsupportedOperationException e) {
             throw new IllegalStateException(e);
         }
@@ -102,7 +81,45 @@ public class ServicioRegistroRevision {
         );
     }
 
+    @Transactional
+    public void tomarRechazoDeEvento(Long eventoId) {
+        EventoSismico eventoSeleccionado = eventoSismicoRepository.findById(eventoId)
+            .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
+
+        try {
+            this.rechazarEventoSismico(eventoSeleccionado);
+            eventoSismicoRepository.save(eventoSeleccionado);
+
+        } catch (UnsupportedOperationException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private Stream<EventoSismicoDTO> buscarEventosAutoDetectados() {
+        // buscarEstadoAutodetectado()
+        Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
+                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
+
+        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado);
+        return eventos.stream()
+            .map(evento -> {
+                    return EventoSismicoDTO.builder()
+                            .id(evento.getId())
+                            .fechaHoraOcurrencia(evento.getFechaHoraOcurrencia())
+                            .ubicacion(evento.getUbicacion())
+                            .valorMagnitud(evento.getValorMagnitud())
+                            .build();
+                });
+    }
+
+    private List<EventoSismicoDTO> ordenarEventosSismicos(Stream<EventoSismicoDTO> eventosDesordenados) {
+        return eventosDesordenados
+            .sorted(Comparator.comparing(EventoSismicoDTO::getFechaHoraOcurrencia))
+            .collect(Collectors.toList());
+    }
+
     private void bloquearEventoSismico(EventoSismico evento) {
+        // buscarEstadoBloqueadoEnRevision()
         Estado estadoBloqueadoEnRevision = estadoRepository.findByNombre("Bloqueado en revisión")
                     .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
 
@@ -149,10 +166,6 @@ public class ServicioRegistroRevision {
             .toList();
     }
 
-    private void llamarCUGenerarSismograma(List<SerieTemporalDTO> seriesTemporalesClasificadas) {
-        System.out.println("Se llamó al CU 'Generar Sismograma' pasandole la lista de series clasificadas por estacion.");
-    }
-
     // Prueba
     private List<CambioEstadoDTO> cambiosEstadoPrueba(EventoSismico eventoSeleccionado) {
         return eventoSeleccionado.getCambiosDeEstado().stream()
@@ -167,9 +180,17 @@ public class ServicioRegistroRevision {
             .toList();
     }
 
+    private void llamarCUGenerarSismograma(List<SerieTemporalDTO> seriesTemporalesClasificadas) {
+        System.out.println("Se llamó al CU 'Generar Sismograma' pasandole la lista de series clasificadas por estacion.");
+    }
+
     private void rechazarEventoSismico(EventoSismico evento) {
+        Estado estadoRechazado = estadoRepository.findByNombre("Rechazado")
+            .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
+
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
         Empleado empleadoLogueado = authService.getASLogueado();
-        evento.rechazar(fechaHoraActual, empleadoLogueado);
+
+        evento.rechazar(fechaHoraActual, empleadoLogueado, estadoRechazado);
     }
 }

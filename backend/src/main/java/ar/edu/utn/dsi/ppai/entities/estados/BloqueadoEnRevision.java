@@ -20,23 +20,23 @@ public class BloqueadoEnRevision extends Estado {
     }
 
     @Override
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoRechazado) {
         for (CambioEstado cambio : cambioEstados) {
             if (cambio.sosCEActual()) {
                 cambio.setFechaHoraHasta(fechaHoraActual);
             }
         }
         
-        Estado rechazadoEstado = new Rechazado("Rechazado");
+        // Estado rechazadoEstado = new Rechazado("Rechazado");
 
         CambioEstado rechazadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)
                 .responsableInspeccion(responsableInspeccion)
-                .estado(rechazadoEstado)
+                .estado(estadoRechazado)
                 .build();
 
         eventoSismico.agregarCambioDeEstado(rechazadoCambioEstado);
-        eventoSismico.setEstadoActual(rechazadoEstado);
+        eventoSismico.setEstadoActual(estadoRechazado);
     }
 
 }

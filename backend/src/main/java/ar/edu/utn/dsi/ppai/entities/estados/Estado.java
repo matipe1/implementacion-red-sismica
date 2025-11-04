@@ -41,7 +41,7 @@ public abstract class Estado {
         );
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoRechazado) {
         throw new UnsupportedOperationException(
             "No se puede rechazar el evento en este estado."
         );

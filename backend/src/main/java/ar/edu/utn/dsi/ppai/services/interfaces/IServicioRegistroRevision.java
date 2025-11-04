@@ -6,6 +6,7 @@ import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
 
 public interface IServicioRegistroRevision {
-    List<EventoSismicoDTO> opcionRegistrarRevisionManual();
-    EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId);
+    public List<EventoSismicoDTO> opcionRegistrarRevisionManual();
+    public EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId);
+    public void tomarRechazoDeEvento(Long eventoId);
 }

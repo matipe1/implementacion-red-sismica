@@ -84,8 +84,8 @@ public class EventoSismico {
         estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this, estadoBloqueadoEnRevision);
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, Estado estadoRechazado) {
+        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this, estadoRechazado);
     }
 
     public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
