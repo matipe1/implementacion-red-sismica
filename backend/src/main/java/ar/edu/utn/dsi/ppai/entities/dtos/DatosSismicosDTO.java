@@ -1,7 +1,5 @@
 package ar.edu.utn.dsi.ppai.entities.dtos;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SerieTemporalDTO {
-    private Integer codigoEstacion;
-
-    private List<MuestraSismicaDTO> muestrasSismicas;
+public class DatosSismicosDTO {
+    private String alcanceSismo;
+    private String clasificacionSismo;
+    private String origenDeGeneracion;
 }

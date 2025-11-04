@@ -8,9 +8,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-// @NoArgsConstructor
-// @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class TipoDeDatoDTO {
-    
+    private String denominacion;
+    private String nombreUnidadMedida;
+    private Integer valorUmbral;
 }

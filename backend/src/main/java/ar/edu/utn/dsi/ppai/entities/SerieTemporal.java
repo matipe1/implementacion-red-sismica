@@ -43,13 +43,8 @@ public class SerieTemporal {
     @ManyToOne(fetch = LAZY) @JoinColumn(name="sismografo_id")
     private Sismografo sismografo;
 
-
-    public List<MuestraSismica> obtenerMuestras() {
-        return muestrasSismicas;
-    }
-
-    public Integer buscarCodigoEstacionDeSismografo(List<Sismografo> allSismografos) {
-        for (Sismografo sismografo : allSismografos) {
+    public Integer buscarCodigoEstacionDeSismografo(List<Sismografo> sismografos) {
+        for (Sismografo sismografo : sismografos) {
             for (SerieTemporal serie : sismografo.getSeriesTemporales()) {
                 if (serie == this) {
                     return sismografo.conocerCodigoEstacion();
@@ -57,5 +52,9 @@ public class SerieTemporal {
             }
         }
         return null;
+    }
+
+    public List<MuestraSismica> obtenerMuestras() {
+        return muestrasSismicas;
     }
 }

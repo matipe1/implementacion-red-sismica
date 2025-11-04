@@ -38,8 +38,4 @@ public class Sismografo {
     public Integer conocerCodigoEstacion() {
         return estacionSismologica.getCodigoEstacion();
     }
-
-    public boolean contieneSerieTemporal(SerieTemporal serie) {
-        return seriesTemporales.contains(serie);
-    }
 }

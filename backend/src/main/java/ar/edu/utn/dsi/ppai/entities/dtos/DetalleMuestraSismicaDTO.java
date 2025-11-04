@@ -13,13 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventoSismicoDetalleDTO {
-    private Long id;
-    private String fechaHoraOcurrencia;
-    private String ubicacion;
-    private Double valorMagnitud;
+public class DetalleMuestraSismicaDTO {
+    private String valor;
 
-    private DatosSismicosDTO datosSismicos;
-
-    private List<SerieTemporalDTO> seriesTemporales;
+    private TipoDeDatoDTO tipoDeDato;
 }

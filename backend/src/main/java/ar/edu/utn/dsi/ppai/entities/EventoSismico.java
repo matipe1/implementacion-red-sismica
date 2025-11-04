@@ -80,37 +80,30 @@ public class EventoSismico {
                 + "Hipocentro: (" + latitudHipocentro + "," + longitudHipocentro + ")";
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
-        System.out.println("Estado seteado a 'RECHAZADO'");
-    }
-
     public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
         estadoActual.bloquear(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
-        System.out.println("Estado seteado a 'BLOQUEADO EN REVISION'");
     }
 
-    public void agregarCambioDeEstado(CambioEstado nuevoCambio) { // cambiar por set y sacar el setter de lombok por defecto
-        if (cambiosDeEstado == null) {
-            cambiosDeEstado = new ArrayList<>();
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
+        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+    }
+
+    public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
+        nuevoCambio.setEventoSismico(this);
+        if (!cambiosDeEstado.contains(nuevoCambio)) {
+            cambiosDeEstado.add(nuevoCambio);
         }
-        System.out.println("Tamaño antes de agregar el ce: " + cambiosDeEstado.size());
-        nuevoCambio.setEventoSismico(this); // para que persista con el JPA
-        cambiosDeEstado.add(nuevoCambio);
-        System.out.println("Tamaño despues de agregar el ce: " + cambiosDeEstado.size());
     }
 
-
-    // METODO DISPARADOR DEL LOOP PARA BUSCAR LAS SERIES Y CLASIFICARLAS
-    public Map<Integer, List<SerieTemporal>> obtenerSeriesTemporalesClasificadas(List<Sismografo> allSismografos) {
-        Map<Integer, List<SerieTemporal>> clasificadas = new HashMap<>();
+    public Map<Integer, List<SerieTemporal>> obtenerSeriesTemporalesClasificadas(List<Sismografo> sismografos) {
+        Map<Integer, List<SerieTemporal>> seriesClasificadas = new HashMap<>();
 
         for (SerieTemporal serie : seriesTemporales) {
-            Integer codigoEstacion = serie.buscarCodigoEstacionDeSismografo(allSismografos);
-            clasificadas.computeIfAbsent(codigoEstacion, k -> new ArrayList<>()).add(serie);
+            Integer codigoEstacion = serie.buscarCodigoEstacionDeSismografo(sismografos);
+            seriesClasificadas.computeIfAbsent(codigoEstacion, k -> new ArrayList<>())
+                .add(serie); // si no hay codigoEstacion
         }
-        System.out.println("Series clasificadas: \n" + clasificadas);
-        return clasificadas;
+        return seriesClasificadas;
     };
 }
 
