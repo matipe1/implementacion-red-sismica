@@ -39,8 +39,8 @@ public class ServicioRegistroRevision {
         Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
                     .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
 
-        Stream<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado); // mas eficiente que hacer findAll y preguntarle a cada estado
-        return eventos
+        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado); // mas eficiente que hacer findAll y preguntarle a cada estado
+        return eventos.stream()
             .map(evento -> {
                     return EventoSismicoDTO.builder()
                             .id(evento.getId())
