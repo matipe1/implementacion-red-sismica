@@ -1,7 +1,6 @@
 package ar.edu.utn.dsi.ppai.services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +9,11 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import ar.edu.utn.dsi.ppai.entities.DetalleMuestraSismica;
 import ar.edu.utn.dsi.ppai.entities.Empleado;
 import ar.edu.utn.dsi.ppai.entities.EventoSismico;
 import ar.edu.utn.dsi.ppai.entities.SerieTemporal;
 import ar.edu.utn.dsi.ppai.entities.Sismografo;
+import ar.edu.utn.dsi.ppai.entities.dtos.CambioEstadoDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.DatosSismicosDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.DetalleMuestraSismicaDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
@@ -27,6 +26,7 @@ import ar.edu.utn.dsi.ppai.repositories.EstadoRepository;
 import ar.edu.utn.dsi.ppai.repositories.EventoSismicoRepository;
 import ar.edu.utn.dsi.ppai.repositories.SismografoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ServicioRegistroRevision {
@@ -54,7 +54,7 @@ public class ServicioRegistroRevision {
         Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
                     .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
 
-        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado); // mas eficiente que hacer findAll y preguntarle a cada estado
+        List<EventoSismico> eventos = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado);
         return eventos.stream()
             .map(evento -> {
                     return EventoSismicoDTO.builder()
@@ -72,14 +72,24 @@ public class ServicioRegistroRevision {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId) {
         EventoSismico eventoSeleccionado = eventoSismicoRepository.findById(eventoId)
             .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
 
-        this.bloquearEventoSismico(eventoSeleccionado);
+        try {
+            this.bloquearEventoSismico(eventoSeleccionado);
+            eventoSismicoRepository.save(eventoSeleccionado);
+        } catch (UnsupportedOperationException e) {
+            throw new IllegalStateException(e);
+        }
 
         DatosSismicosDTO datosSismicos = this.buscarDatosSismicosDeEvento(eventoSeleccionado);
         List<SerieTemporalDTO> seriesTemporales = this.buscarSeriesTemporalesClasificadas(eventoSeleccionado);
+        this.llamarCUGenerarSismograma(seriesTemporales);
+
+        // Prueba 
+        List<CambioEstadoDTO> cambiosEstadoPrueba = this.cambiosEstadoPrueba(eventoSeleccionado);
 
         return new EventoSismicoDetalleDTO(
             eventoSeleccionado.getId(),
@@ -87,13 +97,17 @@ public class ServicioRegistroRevision {
             eventoSeleccionado.getUbicacion(),
             eventoSeleccionado.getValorMagnitud(),
             datosSismicos,
-            seriesTemporales
+            seriesTemporales,
+            cambiosEstadoPrueba // Prueba (sirven para validar como cambiaron los estados)
         );
     }
 
     private void bloquearEventoSismico(EventoSismico evento) {
+        Estado estadoBloqueadoEnRevision = estadoRepository.findByNombre("Bloqueado en revisión")
+                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
+
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
-        evento.bloquear(fechaHoraActual, null);
+        evento.bloquear(fechaHoraActual, estadoBloqueadoEnRevision);
     }
 
     private LocalDateTime obtenerFechaHoraActual() {
@@ -124,8 +138,7 @@ public class ServicioRegistroRevision {
                                     detalle.getValor(),
                                     new TipoDeDatoDTO(
                                         detalle.getTipoDeDato().getDenominacion(),
-                                        detalle.getTipoDeDato().getNombreUnidadMedida(),
-                                        detalle.getTipoDeDato().getValor()
+                                        detalle.getTipoDeDato().getNombreUnidadMedida()
                                     )
                                 ))
                                 .toList()
@@ -133,6 +146,24 @@ public class ServicioRegistroRevision {
                         .toList()
                 ))
             )
+            .toList();
+    }
+
+    private void llamarCUGenerarSismograma(List<SerieTemporalDTO> seriesTemporalesClasificadas) {
+        System.out.println("Se llamó al CU 'Generar Sismograma' pasandole la lista de series clasificadas por estacion.");
+    }
+
+    // Prueba
+    private List<CambioEstadoDTO> cambiosEstadoPrueba(EventoSismico eventoSeleccionado) {
+        return eventoSeleccionado.getCambiosDeEstado().stream()
+            .map(cambio -> new CambioEstadoDTO(
+                cambio.getFechaHoraDesde(),
+                cambio.getFechaHoraHasta(),
+                cambio.getResponsableInspeccion() != null
+                    ? cambio.getResponsableInspeccion().getNombre() + " " + cambio.getResponsableInspeccion().getApellido()
+                    : null,
+                cambio.getEstado().getNombre()
+            ))
             .toList();
     }
 

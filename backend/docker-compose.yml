@@ -10,8 +10,8 @@ services:
     ports:
       - "5433:5432" # Cambia a 5433:5432 si 5432 ya está usado en tu host
     volumes:
-      - pgdata:/var/lib/postgresql/data              # volumen de datos (persistente)
       - ./db/init:/docker-entrypoint-initdb.d        # ejecuta todos los .sql de /db/init
+      - pgdata:/var/lib/postgresql/data              # volumen de datos (persistente)
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d red_sismica"]
       interval: 5s

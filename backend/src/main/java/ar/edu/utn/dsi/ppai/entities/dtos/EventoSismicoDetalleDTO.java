@@ -20,6 +20,7 @@ public class EventoSismicoDetalleDTO {
     private Double valorMagnitud;
 
     private DatosSismicosDTO datosSismicos;
-
     private List<SerieTemporalDTO> seriesTemporales;
+
+    private List<CambioEstadoDTO> cambiosDeEstado; // prueba
 }

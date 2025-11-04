@@ -80,8 +80,8 @@ public class EventoSismico {
                 + "Hipocentro: (" + latitudHipocentro + "," + longitudHipocentro + ")";
     }
 
-    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
-        estadoActual.bloquear(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
+    public void bloquear(LocalDateTime fechaHoraActual, Estado estadoBloqueadoEnRevision) {
+        estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this, estadoBloqueadoEnRevision);
     }
 
     public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {

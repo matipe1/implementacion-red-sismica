@@ -27,7 +27,7 @@ public class BloqueadoEnRevision extends Estado {
             }
         }
         
-        Estado rechazadoEstado = new Rechazado("RECHAZADO");
+        Estado rechazadoEstado = new Rechazado("Rechazado");
 
         CambioEstado rechazadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)

@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS tipo_de_dato (
     id BIGSERIAL PRIMARY KEY,
     denominacion VARCHAR(100) NOT NULL,
     nombre_unidad_medida VARCHAR(100) NOT NULL,
-    valor INTEGER NOT NULL
+    valor_umbral INTEGER NOT NULL
 );
 
 -- 7) ESTACION_SISMOLOGICA

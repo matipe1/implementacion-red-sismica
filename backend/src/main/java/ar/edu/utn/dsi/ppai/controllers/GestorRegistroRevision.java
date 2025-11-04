@@ -2,6 +2,7 @@ package ar.edu.utn.dsi.ppai.controllers;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
 import ar.edu.utn.dsi.ppai.services.ServicioRegistroRevision;
+import jakarta.persistence.EntityNotFoundException;
 
 // import application.InterfazRegistroRevision;
 
@@ -48,13 +50,15 @@ public class GestorRegistroRevision {
     }
 
     @PostMapping("/eventos/{id}/seleccionar")
-    public ResponseEntity<EventoSismicoDetalleDTO> tomarSeleccionDeEvento(@PathVariable Long id) {
-        EventoSismicoDetalleDTO eventoSeleccionado = servicioRegistroRevision.tomarSeleccionDeEvento(id);
-        if (eventoSeleccionado == null) {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> tomarSeleccionDeEvento(@PathVariable Long id) {
+        try {
+            EventoSismicoDetalleDTO eventoSeleccionado = servicioRegistroRevision.tomarSeleccionDeEvento(id);
+            return ResponseEntity.ok(eventoSeleccionado);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(eventoSeleccionado);
     }
 }
 
@@ -86,26 +90,20 @@ public class GestorRegistroRevision {
 // eventosAutodetectados.sort(Comparator.comparing(EventoSismico::getFechaHoraOcurrencia));
 // return eventosAutodetectados;
 // }
-
 // public static void tomarSeleccionDeEvento(EventoSismico eventoSeleccionado) {
 // eventoSeleccionadoActual = eventoSeleccionado;
-
 // bloquearEventoSismico(eventoSeleccionado);
 // String[] datosSismicosDeEventoSeleccionado =
 // buscarDatosSismicosDeEvento(eventoSeleccionado);
-
 // InterfazRegistroRevision.mostrarEventoSeleccionado(eventoSeleccionado);
 // InterfazRegistroRevision.mostrarDatosSismicos(datosSismicosDeEventoSeleccionado);
-
 // Map<Integer, List<SerieTemporal>> seriesTemporalesClasificadas =
 // buscarSeriesTemporalesClasificadas(eventoSeleccionado);
-
 // if (llamarCUGenerarSismograma(seriesTemporalesClasificadas)){
 // System.out.println("Se llamó al CU Generar Sismograma pasándole la lista de
 // muestras.");
 // }
 // }
-
 // // ESTE METODO SERIA EL DISPARADOR PARA OBTENER UN MAP CON LAS SERIES
 // TEMPORALES CLASIFICADAS
 // public static Map<Integer, List<SerieTemporal>>
@@ -113,25 +111,21 @@ public class GestorRegistroRevision {
 // return
 // eventoSeleccionado.obtenerSeriesTemporalesClasificadas(ALL_SISMOGRAFOS);
 // }
-
 // private static Estado buscarEstadoBloqueadoEnRevision() {
 // for (Estado e : ALL_ESTADOS) {
 // if (e.esAmbitoEventoSismico() && e.esBloqueadoEnRevision()){ return e; }
 // }
 // return null;
 // }
-
 // private static void bloquearEventoSismico(EventoSismico eventoSeleccionado) {
 // Estado estadoBloqueadoEnRevision = buscarEstadoBloqueadoEnRevision();
 // LocalDateTime fechaHoraActual = obtenerFechaHoraActual();
 // eventoSeleccionado.bloquear(estadoBloqueadoEnRevision, fechaHoraActual,
 // null);
 // }
-
 // private static LocalDateTime obtenerFechaHoraActual() {
 // return LocalDateTime.now();
 // }
-
 // private static String[] buscarDatosSismicosDeEvento(EventoSismico
 // eventoSeleccionado) {
 // return new String[] {
@@ -139,7 +133,6 @@ public class GestorRegistroRevision {
 // eventoSeleccionado.getClasificacionSismo().getNombre(),
 // eventoSeleccionado.getOrigenDeGeneracion().getNombre()
 // }; }
-
 // /* Este metodo le envía al caso de uso generar sismograma una lista
 // con las series temporales clasificadas por codigo de estacion para que pueda
 // operar*/
@@ -147,10 +140,12 @@ public class GestorRegistroRevision {
 // List<SerieTemporal>> seriesTemporalesClasificadas){
 // return (seriesTemporalesClasificadas != null);
 // }
-
 // public static void tomarRechazoDeEvento() {
 // if (validarDatosSismicos(eventoSeleccionadoActual) && validarSeleccion()) {
 // rechazarEventoSismico(eventoSeleccionadoActual);
+
+
+
 
 // finCU();
 // }

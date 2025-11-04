@@ -31,7 +31,7 @@ public class CambioEstado {
     private Empleado responsableInspeccion;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "estado_id", foreignKey = @ForeignKey(name = "fk_cambio_estado_estado"))
+    @JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cambio_estado_estado"))
     private Estado estado;
 
     @ManyToOne(fetch = LAZY) @JoinColumn(name="evento_sismico_id")

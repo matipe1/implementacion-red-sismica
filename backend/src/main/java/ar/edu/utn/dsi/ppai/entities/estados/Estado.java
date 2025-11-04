@@ -35,15 +35,15 @@ public abstract class Estado {
         );
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoBloqueado) {
         throw new UnsupportedOperationException(
-            "No se puede rechazar el evento en este estado."
+            "No se puede bloquear el evento en este estado."
         );
     }
 
-    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         throw new UnsupportedOperationException(
-            "No se puede bloquear el evento en este estado."
+            "No se puede rechazar el evento en este estado."
         );
     }
 

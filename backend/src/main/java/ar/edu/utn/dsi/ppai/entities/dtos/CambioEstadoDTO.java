@@ -1,5 +1,7 @@
 package ar.edu.utn.dsi.ppai.entities.dtos;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DetalleMuestraSismicaDTO {
-    private String valor;
-
-    private TipoDeDatoDTO tipoDeDato;
+public class CambioEstadoDTO {
+    LocalDateTime fechaHoraDesde;
+    LocalDateTime fechaHoraHasta;
+    String responsableInspeccion;
+    String estado;
 }

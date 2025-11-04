@@ -20,22 +20,21 @@ public class AutoDetectado extends Estado {
     }
 
     @Override
-    public void bloquear(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
+    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoBloqueado) {
         for (CambioEstado cambio : cambioEstados) {
             if (cambio.sosCEActual()) {
                 cambio.setFechaHoraHasta(fechaHoraActual);
             }
         }
 
-        Estado bloqueadoEstado = new BloqueadoEnRevision("BLOQUEADO EN REVISION");
+        // Estado bloqueadoCambioEstado = new BloqueadoEnRevision("Bloqueado en revisión");
 
         CambioEstado bloqueadoCambioEstado = CambioEstado.builder()
                 .fechaHoraDesde(fechaHoraActual)
-                .responsableInspeccion(responsableInspeccion)
-                .estado(bloqueadoEstado)
+                .estado(estadoBloqueado)
                 .build();
 
         eventoSismico.agregarCambioDeEstado(bloqueadoCambioEstado);
-        eventoSismico.setEstadoActual(bloqueadoEstado);
+        eventoSismico.setEstadoActual(estadoBloqueado);
     }
 }

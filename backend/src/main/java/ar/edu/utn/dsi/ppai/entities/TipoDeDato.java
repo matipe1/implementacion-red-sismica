@@ -22,6 +22,6 @@ public class TipoDeDato {
     @Column(name = "nombre_unidad_medida", nullable = false, length = 100)
     private String nombreUnidadMedida;
 
-    @Column(nullable = false)
+    @Column(name = "valor_umbral", nullable = false)
     private Integer valor;
 }

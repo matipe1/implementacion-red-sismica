@@ -14,5 +14,4 @@ import lombok.Setter;
 public class TipoDeDatoDTO {
     private String denominacion;
     private String nombreUnidadMedida;
-    private Integer valorUmbral;
 }
