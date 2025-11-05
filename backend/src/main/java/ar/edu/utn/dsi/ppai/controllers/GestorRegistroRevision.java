@@ -5,13 +5,14 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
+import ar.edu.utn.dsi.ppai.entities.dtos.CoordenadasAproximadasDTO;
 import ar.edu.utn.dsi.ppai.services.ServicioRegistroRevision;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -32,10 +33,16 @@ public class GestorRegistroRevision {
                 : ResponseEntity.ok(eventos);
     }
 
-    @PostMapping("/eventos/{id}/seleccionar")
-    public ResponseEntity<?> tomarSeleccionDeEvento(@PathVariable Long id) {
+    @PostMapping("/eventos/seleccionar")
+    public ResponseEntity<?> tomarSeleccionDeEvento(@RequestBody CoordenadasAproximadasDTO request) {
         try {
-            EventoSismicoDetalleDTO eventoSeleccionado = servicioRegistroRevision.tomarSeleccionDeEvento(id);
+            EventoSismicoDetalleDTO eventoSeleccionado =
+                servicioRegistroRevision.tomarSeleccionDeEvento(
+                    request.getLatitudEpicentro(),
+                    request.getLongitudEpicentro(),
+                    request.getLatitudHipocentro(),
+                    request.getLongitudHipocentro()
+                );
             return ResponseEntity.ok(eventoSeleccionado);
 
         } catch (IllegalStateException e) {
@@ -46,10 +53,15 @@ public class GestorRegistroRevision {
         }
     }
 
-    @PostMapping("/eventos/{id}/rechazar")
-    public ResponseEntity<Void> tomarRechazoDeEvento(@PathVariable Long eventoId) {
+    @PostMapping("/eventos/rechazar")
+    public ResponseEntity<Void> tomarRechazoDeEvento(@RequestBody CoordenadasAproximadasDTO request) {
         try {
-            servicioRegistroRevision.tomarRechazoDeEvento(eventoId);
+            servicioRegistroRevision.tomarRechazoDeEvento(
+                    request.getLatitudEpicentro(),
+                    request.getLongitudEpicentro(),
+                    request.getLatitudHipocentro(),
+                    request.getLongitudHipocentro()
+                );
             return ResponseEntity.ok().build();
 
         } catch (IllegalStateException e) {

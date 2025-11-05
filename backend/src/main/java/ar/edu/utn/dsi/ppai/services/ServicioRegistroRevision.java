@@ -51,8 +51,14 @@ public class ServicioRegistroRevision {
     }
     
     @Transactional
-    public EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId) {
-        EventoSismico eventoSeleccionado = eventoSismicoRepository.findById(eventoId)
+    public EventoSismicoDetalleDTO tomarSeleccionDeEvento(
+            Double latitudEpicentro,
+            Double longitudEpicentro,
+            Double latitudHipocentro,
+            Double longitudHipocentro) {
+        
+        EventoSismico eventoSeleccionado = eventoSismicoRepository.findByCoordenadasAproximadas(
+                latitudEpicentro, longitudEpicentro, latitudHipocentro, longitudHipocentro)
             .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
 
         try {
@@ -71,7 +77,6 @@ public class ServicioRegistroRevision {
         List<CambioEstadoDTO> cambiosEstadoPrueba = this.cambiosEstadoPrueba(eventoSeleccionado);
 
         return new EventoSismicoDetalleDTO(
-            eventoSeleccionado.getId(),
             eventoSeleccionado.getFechaHoraOcurrencia(),
             eventoSeleccionado.getUbicacion(),
             eventoSeleccionado.getValorMagnitud(),
@@ -82,8 +87,14 @@ public class ServicioRegistroRevision {
     }
 
     @Transactional
-    public void tomarRechazoDeEvento(Long eventoId) {
-        EventoSismico eventoSeleccionado = eventoSismicoRepository.findById(eventoId)
+    public void tomarRechazoDeEvento(
+            Double latitudEpicentro,
+            Double longitudEpicentro,
+            Double latitudHipocentro,
+            Double longitudHipocentro) {
+                
+        EventoSismico eventoSeleccionado = eventoSismicoRepository.findByCoordenadasAproximadas(
+            latitudEpicentro, longitudEpicentro, latitudHipocentro, longitudHipocentro)
             .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
 
         try {
@@ -96,7 +107,7 @@ public class ServicioRegistroRevision {
     }
 
     private Stream<EventoSismicoDTO> buscarEventosAutoDetectados() {
-        // buscarEstadoAutodetectado()
+        // this.buscarEstadoAutodetectado();
         Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
                     .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
 
@@ -104,7 +115,6 @@ public class ServicioRegistroRevision {
         return eventos.stream()
             .map(evento -> {
                     return EventoSismicoDTO.builder()
-                            .id(evento.getId())
                             .fechaHoraOcurrencia(evento.getFechaHoraOcurrencia())
                             .ubicacion(evento.getUbicacion())
                             .valorMagnitud(evento.getValorMagnitud())
@@ -119,12 +129,15 @@ public class ServicioRegistroRevision {
     }
 
     private void bloquearEventoSismico(EventoSismico evento) {
-        // buscarEstadoBloqueadoEnRevision()
-        Estado estadoBloqueadoEnRevision = estadoRepository.findByNombre("Bloqueado en revisión")
-                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
+        Estado estadoBloqueadoEnRevision = this.buscarEstadoBloqueadoEnRevision(evento);
 
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
         evento.bloquear(fechaHoraActual, estadoBloqueadoEnRevision);
+    }
+
+    private Estado buscarEstadoBloqueadoEnRevision(EventoSismico evento) {
+        return estadoRepository.findByNombre("Bloqueado en revisión")
+                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
     }
 
     private LocalDateTime obtenerFechaHoraActual() {
@@ -185,12 +198,17 @@ public class ServicioRegistroRevision {
     }
 
     private void rechazarEventoSismico(EventoSismico evento) {
-        Estado estadoRechazado = estadoRepository.findByNombre("Rechazado")
-            .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
+
+        Estado estadoRechazado = this.buscarEstadoRechazado(evento);
 
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
         Empleado empleadoLogueado = authService.getASLogueado();
 
         evento.rechazar(fechaHoraActual, empleadoLogueado, estadoRechazado);
+    }
+
+    private Estado buscarEstadoRechazado(EventoSismico evento) {
+        return estadoRepository.findByNombre("Rechazado")
+            .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
     }
 }
