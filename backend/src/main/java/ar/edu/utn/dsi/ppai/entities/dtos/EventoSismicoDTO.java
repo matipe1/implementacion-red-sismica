@@ -12,7 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class EventoSismicoDTO {
-    private Long id;
     private String fechaHoraOcurrencia;
     private String ubicacion;
     private Double valorMagnitud;

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS empleado (
 -- 2) ESTADO
 CREATE TABLE IF NOT EXISTS estado (
     id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
     tipo_estado VARCHAR(100) NOT NULL  -- columna para discriminar subclases
 );
 

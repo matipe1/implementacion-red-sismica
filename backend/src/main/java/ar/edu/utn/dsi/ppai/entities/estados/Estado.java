@@ -8,13 +8,13 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "estado")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_estado", discriminatorType = DiscriminatorType.STRING)
 @Getter
-@Setter
 @NoArgsConstructor
 public abstract class Estado {
 
@@ -22,7 +22,7 @@ public abstract class Estado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nombre", unique = true, nullable = false, length = 100)
     private String nombre;
 
     public Estado(String nombre) {
@@ -47,5 +47,17 @@ public abstract class Estado {
         );
     }
 
-    // Probablemente faltan agregar metodos de otros estados
+    // equals y hashCode basados únicamente en nombre
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Estado)) return false;
+        Estado e = (Estado) obj;
+        return Objects.equals(nombre, e.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre);
+    }
 }
