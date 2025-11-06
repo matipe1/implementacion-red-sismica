@@ -73,7 +73,7 @@ public class EventoSismico {
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SerieTemporal> seriesTemporales = new ArrayList<>();
 
-    public String getFechaHoraOcurrencia() {
+    public String getFechaHoraOcurrenciaFormateada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return fechaHoraOcurrencia.format(formatter);
     }

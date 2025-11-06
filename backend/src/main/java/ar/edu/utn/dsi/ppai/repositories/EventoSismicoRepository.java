@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,15 +17,20 @@ public interface EventoSismicoRepository extends JpaRepository<EventoSismico, Lo
 
     @Query("""
       SELECT e FROM EventoSismico e
-      WHERE e.latitudEpicentro BETWEEN :latEpi - 0.5 AND :latEpi + 0.5
-        AND e.longitudEpicentro BETWEEN :lonEpi - 0.5 AND :lonEpi + 0.5
-        AND e.latitudHipocentro BETWEEN :latHip - 0.5 AND :latHip + 0.5
-        AND e.longitudHipocentro BETWEEN :lonHip - 0.5 AND :lonHip + 0.5
+      WHERE e.fechaHoraOcurrencia = :fechaHoraOcurrencia
+        AND e.latitudEpicentro = :latEpi
+        AND e.longitudEpicentro = :lonEpi
+        AND e.latitudHipocentro = :latHip
+        AND e.longitudHipocentro = :lonHip
+        AND e.valorMagnitud = :valor
+
     """)
-    Optional<EventoSismico> findByCoordenadasAproximadas(
-      @Param("latEpi") Double latEpi,
-      @Param("lonEpi") Double lonEpi,
-      @Param("latHip") Double latHip,
-      @Param("lonHip") Double lonHip
+    Optional<EventoSismico> findByDatosBase(
+      @Param("fechaHoraOcurrencia") LocalDateTime fechaHoraOcurrencia,
+      @Param("latEpi") BigDecimal latEpi,
+      @Param("lonEpi") BigDecimal lonEpi,
+      @Param("latHip") BigDecimal latHip,
+      @Param("lonHip") BigDecimal lonHip,
+      @Param("valor") BigDecimal valor
     );
 }
