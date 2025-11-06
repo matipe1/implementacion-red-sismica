@@ -14,10 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class EventoSismicoDetalleDTO {
-    private String fechaHoraOcurrencia;
-    private String ubicacion;
-    private Double valorMagnitud;
 
+    private EventoSismicoDTO eventoSismico;
     private DatosSismicosDTO datosSismicos;
     private List<SerieTemporalDTO> seriesTemporales;
 
