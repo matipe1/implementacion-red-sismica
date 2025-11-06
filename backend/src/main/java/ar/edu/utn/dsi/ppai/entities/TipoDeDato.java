@@ -1,5 +1,7 @@
 package ar.edu.utn.dsi.ppai.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +24,6 @@ public class TipoDeDato {
     @Column(name = "nombre_unidad_medida", nullable = false, length = 100)
     private String nombreUnidadMedida;
 
-    @Column(name = "valor_umbral", nullable = false)
-    private Integer valor;
+    @Column(name = "valor_umbral", nullable = false, precision = 4, scale = 2)
+    private BigDecimal valorUmbral;
 }

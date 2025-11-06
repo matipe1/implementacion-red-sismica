@@ -57,15 +57,15 @@ INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, 
 -- 6) USUARIO Y SESIÓN (para simular empleado logueado)
 -- =========================================================
 INSERT INTO usuario (nombre_usuario, contrasena, empleado_id)
-VALUES ('usuarioActual', 'password', 3); -- que sea maravilla
+VALUES ('admin', 'admin123', 4);
 
 INSERT INTO sesion (fecha_hora, usuario_id)
 VALUES (NOW(), 1);
 
 -- =========================================================
 -- 7) EVENTOS SÍSMICOS
--- =========================================================
 -- (1 y 2 autodetectados, 3 autoconfirmado y 4 rechazado)
+-- =========================================================
 INSERT INTO evento_sismico (
     fecha_hora_ocurrencia, fecha_hora_fin,
     latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro, 
@@ -97,17 +97,17 @@ INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspe
 -- =========================================================
 INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_id) VALUES
 -- Evento 1
-('2025-02-21 19:05:41', '50', '2025-02-21 19:05:41', false, 1, 1),
-('2025-02-21 19:05:41', '100', '2025-02-21 19:05:41', false, 1, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 1),
+('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 2),
 -- Evento 2
-('2025-02-22 10:00:00', '50', '2025-02-22 10:00:00', false, 2, 1),
-('2025-02-22 10:00:00', '100', '2025-02-22 10:00:00', false, 2, 2),
+('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 1),
+('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 2),
 -- Evento 3
-('2025-02-21 19:05:41', '50', '2025-02-21 19:05:41', false, 3, 1),
-('2025-03-05 14:30:00', '100', '2025-03-05 14:30:00', false, 3, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 1),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 2),
 -- Evento 4
-('2025-02-21 19:05:41', '50', '2025-02-21 19:05:41', false, 4, 1),
-('2025-03-05 14:30:00', '100', '2025-03-05 14:30:00', false, 4, 2);
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 1),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 2);
 
 
 INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
@@ -155,7 +155,6 @@ INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
 -- 10) DETALLE_MUESTRA_SISMICA
 -- (72 registros: 24 muestras * 3 detalles c/u)
 -- =========================================================
-
 INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VALUES
 -- Serie 1 (Evento 1 - Estación 100)
 ('5.0', 1, 1), ('10.0', 2, 1), ('0.7', 3, 1),

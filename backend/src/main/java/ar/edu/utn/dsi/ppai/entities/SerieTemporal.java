@@ -2,6 +2,8 @@ package ar.edu.utn.dsi.ppai.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,8 @@ public class SerieTemporal {
     @Column(name = "fecha_hora_inicio_registro", nullable = false)
     private LocalDateTime fechaHoraInicioRegistroMuestras;
 
-    @Column(name = "frecuencia_muestreo", nullable = false, length = 50)
-    private String frecuenciaMuestreo;
+    @Column(name = "frecuencia_muestreo", nullable = false, precision = 6, scale = 2)
+    private BigDecimal frecuenciaMuestreo;
 
     @Column(name = "fecha_hora_registro", nullable = false)
     private LocalDateTime fechaHoraRegistro;

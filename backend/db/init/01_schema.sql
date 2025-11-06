@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS tipo_de_dato (
     id BIGSERIAL PRIMARY KEY,
     denominacion VARCHAR(100) NOT NULL,
     nombre_unidad_medida VARCHAR(100) NOT NULL,
-    valor_umbral INTEGER NOT NULL
+    valor_umbral NUMERIC(4, 2) NOT NULL
 );
 
 -- 7) ESTACION_SISMOLOGICA
@@ -74,11 +74,11 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     id BIGSERIAL PRIMARY KEY,
     fecha_hora_ocurrencia TIMESTAMP NOT NULL,
     fecha_hora_fin TIMESTAMP,
-    latitud_epicentro DOUBLE PRECISION NOT NULL,
-    longitud_epicentro DOUBLE PRECISION NOT NULL,
-    latitud_hipocentro DOUBLE PRECISION NOT NULL,
-    longitud_hipocentro DOUBLE PRECISION NOT NULL,
-    valor_magnitud DOUBLE PRECISION NOT NULL,
+    latitud_epicentro NUMERIC(9, 6) NOT NULL,
+    longitud_epicentro NUMERIC(9, 6) NOT NULL,
+    latitud_hipocentro NUMERIC(9, 6) NOT NULL,
+    longitud_hipocentro NUMERIC(9, 6) NOT NULL,
+    valor_magnitud NUMERIC(4, 2) NOT NULL,
     analista_supervisor_id BIGINT,
     estado_actual_id BIGINT,
     clasificacion_sismo_id BIGINT,
@@ -108,9 +108,9 @@ CREATE TABLE IF NOT EXISTS cambio_estado (
 CREATE TABLE IF NOT EXISTS serie_temporal (
     id BIGSERIAL PRIMARY KEY,
     fecha_hora_inicio_registro TIMESTAMP NOT NULL,
-    frecuencia_muestreo VARCHAR(50) NOT NULL,
+    frecuencia_muestreo NUMERIC(6, 2) NOT NULL,
     fecha_hora_registro TIMESTAMP NOT NULL,
-    alerta_alarma BOOLEAN NOT NULL, -- deberia ser not null ?
+    alerta_alarma BOOLEAN NOT NULL,
     evento_sismico_id BIGINT,
     sismografo_id BIGINT,
     CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE,

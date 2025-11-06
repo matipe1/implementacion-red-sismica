@@ -3,6 +3,8 @@ package ar.edu.utn.dsi.ppai.entities;
 import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class EventoSismico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "fecha_hora_ocurrencia", nullable = false)
     private LocalDateTime fechaHoraOcurrencia;
@@ -29,35 +31,22 @@ public class EventoSismico {
     @Column(name = "fecha_hora_fin")
     private LocalDateTime fechaHoraFin;
 
-    @Column(name = "latitud_epicentro", nullable = false)
-    private Double latitudEpicentro;
+    @Column(name = "latitud_epicentro", nullable = false, precision = 9, scale = 6)
+    private BigDecimal latitudEpicentro;
 
-    @Column(name = "longitud_epicentro", nullable = false)
-    private Double longitudEpicentro;
+    @Column(name = "longitud_epicentro", nullable = false, precision = 9, scale = 6)
+    private BigDecimal longitudEpicentro;
 
-    @Column(name = "latitud_hipocentro")
-    private Double latitudHipocentro;
+    @Column(name = "latitud_hipocentro", precision = 9, scale = 6)
+    private BigDecimal latitudHipocentro;
 
-    @Column(name = "longitud_hipocentro")
-    private Double longitudHipocentro;
+    @Column(name = "longitud_hipocentro", precision = 9, scale = 6)
+    private BigDecimal longitudHipocentro;
 
-    @Column(name = "valor_magnitud", nullable = false)
-    private Double valorMagnitud;
+    @Column(name = "valor_magnitud", nullable = false, precision = 4, scale = 2)
+    private BigDecimal valorMagnitud;
 
-    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SerieTemporal> seriesTemporales = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
-    private Empleado analistaSupervisor;
-
-    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<CambioEstado> cambiosDeEstado = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_actual_id", foreignKey = @ForeignKey(name = "fk_evento_estado"))
-    private Estado estadoActual;
-
+    // Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clasificacion_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_clasificacion"))
     private ClasificacionSismo clasificacionSismo;
@@ -69,24 +58,36 @@ public class EventoSismico {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alcance_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_alcance"))
     private AlcanceSismo alcanceSismo;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
+    private Empleado analistaSupervisor;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_actual_id", foreignKey = @ForeignKey(name = "fk_evento_estado"))
+    private Estado estadoActual;
+    
+    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CambioEstado> cambiosDeEstado = new ArrayList<>();
+
+    @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SerieTemporal> seriesTemporales = new ArrayList<>();
 
     public String getFechaHoraOcurrencia() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return fechaHoraOcurrencia.format(formatter);
     }
-
-    public String getUbicacion() {
-        return "Epicentro: (" + latitudEpicentro + "," + longitudEpicentro + ") - "
-                + "Hipocentro: (" + latitudHipocentro + "," + longitudHipocentro + ")";
-    }
-
-    public void bloquear(LocalDateTime fechaHoraActual, Estado estadoBloqueadoEnRevision) {
-        estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this, estadoBloqueadoEnRevision);
-    }
-
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, Estado estadoRechazado) {
-        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this, estadoRechazado);
-    }
+    
+    public Map<Integer, List<SerieTemporal>> obtenerSeriesTemporalesClasificadas(List<Sismografo> sismografos) {
+        Map<Integer, List<SerieTemporal>> seriesClasificadas = new HashMap<>();
+        
+        for (SerieTemporal serie : seriesTemporales) {
+            Integer codigoEstacion = serie.buscarCodigoEstacionDeSismografo(sismografos);
+            seriesClasificadas.computeIfAbsent(codigoEstacion, k -> new ArrayList<>())
+            .add(serie); // si no hay codigoEstacion
+        }
+        return seriesClasificadas;
+    };
 
     public void agregarCambioDeEstado(CambioEstado nuevoCambio) {
         nuevoCambio.setEventoSismico(this);
@@ -95,34 +96,12 @@ public class EventoSismico {
         }
     }
 
-    public Map<Integer, List<SerieTemporal>> obtenerSeriesTemporalesClasificadas(List<Sismografo> sismografos) {
-        Map<Integer, List<SerieTemporal>> seriesClasificadas = new HashMap<>();
+    // Propios del patron State
+    public void bloquear(LocalDateTime fechaHoraActual, Estado estadoBloqueadoEnRevision) {
+        estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this, estadoBloqueadoEnRevision);
+    }
 
-        for (SerieTemporal serie : seriesTemporales) {
-            Integer codigoEstacion = serie.buscarCodigoEstacionDeSismografo(sismografos);
-            seriesClasificadas.computeIfAbsent(codigoEstacion, k -> new ArrayList<>())
-                .add(serie); // si no hay codigoEstacion
-        }
-        return seriesClasificadas;
-    };
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, Estado estadoRechazado) {
+        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this, estadoRechazado);
+    }
 }
-
-/*
-MÉTODOS PERTENECIENTES A LA MAQUINA DE ESTADOS Y EL DOMINIO DADO
-SE COLOCAN PARA MANEJAR LA CONSISTENCIA ENTRE LAS VISTAS Y EL CÓDIGO
-public void autoConfirmar(Estado autoconfirmado) { setEstado(autoconfirmado); }
-
-public void autoDetectar(Estado autodetectado) { setEstado(autodetectado); }
-
-public void marcarPendienteDeRevision(Estado pendienteDeRevision) { setEstado(pendienteDeRevision); }
-
-public void derivarASupervisor(Estado aSupervisor) { setEstado(aSupervisor); }
-
-public void confirmar(Estado confirmado) { setEstado(confirmado); }
-
-public void marcarSinRevision(Estado sinRevision) { setEstado(sinRevision); }
-
-public void marcarPendienteDeCierre(Estado pendienteDeCierre) { setEstado(pendienteDeCierre); }
-
-public void marcarCierreDeEvento(Estado cierreDeEvento) { setEstado(cierreDeEvento); }
-*/

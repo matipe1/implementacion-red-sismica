@@ -28,7 +28,6 @@ public class DetalleMuestraSismica {
     @ManyToOne(fetch = LAZY) @JoinColumn(name="muestra_sismica_id")
     private MuestraSismica muestraSismica;
 
-
     public String[] getDatos() {
         String[] datos = new String[2];
         datos[0] = tipoDeDato.getDenominacion();
