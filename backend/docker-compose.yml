@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: red_sismica
-      TZ: America/Argentina/Buenos_Aires
+      TZ: "America/Argentina/Buenos_Aires"
     ports:
       - "5433:5432" # Cambia a 5433:5432 si 5432 ya está usado en tu host
     volumes:

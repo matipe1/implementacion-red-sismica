@@ -2,10 +2,11 @@ package ar.edu.utn.dsi.ppai.entities.estados;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("AUTOCONFIRMADO")
+@Table(name= "autoconfirmado")
 @NoArgsConstructor
 public class AutoConfirmado extends Estado {
     
