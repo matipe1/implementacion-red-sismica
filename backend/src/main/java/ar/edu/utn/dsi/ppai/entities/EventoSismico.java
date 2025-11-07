@@ -97,11 +97,11 @@ public class EventoSismico {
     }
 
     // Propios del patron State
-    public void bloquear(LocalDateTime fechaHoraActual, Estado estadoBloqueadoEnRevision) {
-        estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this, estadoBloqueadoEnRevision);
+    public void bloquear(LocalDateTime fechaHoraActual) {
+        estadoActual.bloquear(fechaHoraActual, cambiosDeEstado, this);
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, Estado estadoRechazado) {
-        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this, estadoRechazado);
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion) {
+        estadoActual.rechazar(fechaHoraActual, responsableInspeccion, cambiosDeEstado, this);
     }
 }
