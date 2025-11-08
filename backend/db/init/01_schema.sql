@@ -155,8 +155,7 @@ CREATE TABLE IF NOT EXISTS detalle_muestra_sismica (
 
 -- 14) USUARIO
 CREATE TABLE IF NOT EXISTS usuario (
-    id BIGSERIAL PRIMARY KEY,
-    nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(100) PRIMARY KEY,
     contrasena VARCHAR(255) NOT NULL,
     empleado_mail VARCHAR(150),
     CONSTRAINT fk_usuario_empleado FOREIGN KEY (empleado_mail) REFERENCES empleado(mail)
@@ -166,6 +165,6 @@ CREATE TABLE IF NOT EXISTS usuario (
 CREATE TABLE IF NOT EXISTS sesion (
     id BIGSERIAL PRIMARY KEY,
     fecha_hora TIMESTAMP NOT NULL,
-    usuario_id BIGINT,
-    CONSTRAINT fk_sesion_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    usuario_nombre VARCHAR(100),
+    CONSTRAINT fk_sesion_usuario FOREIGN KEY (usuario_nombre) REFERENCES usuario(nombre_usuario)
 );

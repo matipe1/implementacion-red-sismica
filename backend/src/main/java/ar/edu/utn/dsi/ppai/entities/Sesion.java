@@ -21,7 +21,7 @@ public class Sesion {
     private LocalDateTime fechaHora;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", foreignKey = @ForeignKey(name = "fk_sesion_usuario"))
+    @JoinColumn(name = "usuario_nombre", foreignKey = @ForeignKey(name = "fk_sesion_usuario"))
     private Usuario usuario;
 
     public Empleado buscarASLogueado() {

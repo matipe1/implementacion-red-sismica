@@ -63,8 +63,8 @@ INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, 
 INSERT INTO usuario (nombre_usuario, contrasena, empleado_mail)
 VALUES ('admin', 'admin123', 'maravilla@gmail.com');
 
-INSERT INTO sesion (fecha_hora, usuario_id)
-VALUES (NOW(), 1);
+INSERT INTO sesion (fecha_hora, usuario_nombre)
+VALUES (NOW(), 'admin');
 -- =========================================================
 -- 7) EVENTOS SÍSMICOS
 -- =========================================================
@@ -214,7 +214,6 @@ SELECT setval('estado_seq', (SELECT MAX(id) FROM (
   SELECT MAX(id) FROM autoconfirmado
 ) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
-SELECT setval('usuario_id_seq', (SELECT MAX(id) FROM usuario));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
 SELECT setval('evento_sismico_id_seq', (SELECT MAX(id) FROM evento_sismico));
 SELECT setval('cambio_estado_id_seq', (SELECT MAX(id) FROM cambio_estado));
