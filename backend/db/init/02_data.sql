@@ -156,46 +156,46 @@ INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
 -- 10) DETALLE_MUESTRA_SISMICA
 -- (72 registros: 24 muestras * 3 detalles c/u)
 -- =========================================================
-INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VALUES
+INSERT INTO detalle_muestra_sismica (valor, tipo_dato_denominacion, muestra_sismica_id) VALUES
 -- Serie 1 (Evento 1 - Estación 100)
-('5.0', 1, 1), ('10.0', 2, 1), ('0.7', 3, 1),
-('5.3', 1, 2), ('10.1', 2, 2), ('0.6', 3, 2),
-('5.5', 1, 3), ('10.2', 2, 3), ('0.65', 3, 3),
+('5.0', 'Velocidad de onda', 1), ('10.0', 'Frecuencia de onda', 1), ('0.7', 'Longitud de onda', 1),
+('5.3', 'Velocidad de onda', 2), ('10.1', 'Frecuencia de onda', 2), ('0.6', 'Longitud de onda', 2),
+('5.5', 'Velocidad de onda', 3), ('10.2', 'Frecuencia de onda', 3), ('0.65', 'Longitud de onda', 3),
 
 -- Serie 2 (Evento 1 - Estación 200)
-('4.8', 1, 4), ('12.0', 2, 4), ('0.6', 3, 4),
-('4.9', 1, 5), ('11.8', 2, 5), ('0.62', 3, 5),
-('5.1', 1, 6), ('11.6', 2, 6), ('0.64', 3, 6),
+('4.8', 'Velocidad de onda', 4), ('12.0', 'Frecuencia de onda', 4), ('0.6', 'Longitud de onda', 4),
+('4.9', 'Velocidad de onda', 5), ('11.8', 'Frecuencia de onda', 5), ('0.62', 'Longitud de onda', 5),
+('5.1', 'Velocidad de onda', 6), ('11.6', 'Frecuencia de onda', 6), ('0.64', 'Longitud de onda', 6),
 
 -- Serie 3 (Evento 2 - Estación 100)
-('6.0', 1, 7), ('13.0', 2, 7), ('0.75', 3, 7),
-('6.2', 1, 8), ('12.9', 2, 8), ('0.70', 3, 8),
-('6.3', 1, 9), ('12.7', 2, 9), ('0.72', 3, 9),
+('6.0', 'Velocidad de onda', 7), ('13.0', 'Frecuencia de onda', 7), ('0.75', 'Longitud de onda', 7),
+('6.2', 'Velocidad de onda', 8), ('12.9', 'Frecuencia de onda', 8), ('0.70', 'Longitud de onda', 8),
+('6.3', 'Velocidad de onda', 9), ('12.7', 'Frecuencia de onda', 9), ('0.72', 'Longitud de onda', 9),
 
 -- Serie 4 (Evento 2 - Estación 200)
-('4.7', 1, 10), ('11.9', 2, 10), ('0.66', 3, 10),
-('4.9', 1, 11), ('11.7', 2, 11), ('0.68', 3, 11),
-('5.0', 1, 12), ('11.6', 2, 12), ('0.65', 3, 12),
+('4.7', 'Velocidad de onda', 10), ('11.9', 'Frecuencia de onda', 10), ('0.66', 'Longitud de onda', 10),
+('4.9', 'Velocidad de onda', 11), ('11.7', 'Frecuencia de onda', 11), ('0.68', 'Longitud de onda', 11),
+('5.0', 'Velocidad de onda', 12), ('11.6', 'Frecuencia de onda', 12), ('0.65', 'Longitud de onda', 12),
 
 -- Serie 5 (Evento 3 - Estación 100)
-('7.0', 1, 13), ('13.5', 2, 13), ('0.8', 3, 13),
-('7.1', 1, 14), ('13.2', 2, 14), ('0.82', 3, 14),
-('7.3', 1, 15), ('13.0', 2, 15), ('0.85', 3, 15),
+('7.0', 'Velocidad de onda', 13), ('13.5', 'Frecuencia de onda', 13), ('0.8', 'Longitud de onda', 13),
+('7.1', 'Velocidad de onda', 14), ('13.2', 'Frecuencia de onda', 14), ('0.82', 'Longitud de onda', 14),
+('7.3', 'Velocidad de onda', 15), ('13.0', 'Frecuencia de onda', 15), ('0.85', 'Longitud de onda', 15),
 
 -- Serie 6 (Evento 3 - Estación 200)
-('6.8', 1, 16), ('12.8', 2, 16), ('0.78', 3, 16),
-('6.9', 1, 17), ('12.9', 2, 17), ('0.76', 3, 17),
-('7.0', 1, 18), ('13.1', 2, 18), ('0.79', 3, 18),
+('6.8', 'Velocidad de onda', 16), ('12.8', 'Frecuencia de onda', 16), ('0.78', 'Longitud de onda', 16),
+('6.9', 'Velocidad de onda', 17), ('12.9', 'Frecuencia de onda', 17), ('0.76', 'Longitud de onda', 17),
+('7.0', 'Velocidad de onda', 18), ('13.1', 'Frecuencia de onda', 18), ('0.79', 'Longitud de onda', 18),
 
 -- Serie 7 (Evento 4 - Estación 100)
-('4.4', 1, 19), ('10.9', 2, 19), ('0.55', 3, 19),
-('4.5', 1, 20), ('11.0', 2, 20), ('0.57', 3, 20),
-('4.6', 1, 21), ('11.1', 2, 21), ('0.58', 3, 21),
+('4.4', 'Velocidad de onda', 19), ('10.9', 'Frecuencia de onda', 19), ('0.55', 'Longitud de onda', 19),
+('4.5', 'Velocidad de onda', 20), ('11.0', 'Frecuencia de onda', 20), ('0.57', 'Longitud de onda', 20),
+('4.6', 'Velocidad de onda', 21), ('11.1', 'Frecuencia de onda', 21), ('0.58', 'Longitud de onda', 21),
 
 -- Serie 8 (Evento 4 - Estación 200)
-('4.3', 1, 22), ('10.8', 2, 22), ('0.52', 3, 22),
-('4.5', 1, 23), ('11.0', 2, 23), ('0.54', 3, 23),
-('4.7', 1, 24), ('11.2', 2, 24), ('0.56', 3, 24);
+('4.3', 'Velocidad de onda', 22), ('10.8', 'Frecuencia de onda', 22), ('0.52', 'Longitud de onda', 22),
+('4.5', 'Velocidad de onda', 23), ('11.0', 'Frecuencia de onda', 23), ('0.54', 'Longitud de onda', 23),
+('4.7', 'Velocidad de onda', 24), ('11.2', 'Frecuencia de onda', 24), ('0.56', 'Longitud de onda', 24);
 
 -- =========================================================
 -- 11) REINICIO DE SECUENCIAS
@@ -214,7 +214,6 @@ SELECT setval('estado_seq', (SELECT MAX(id) FROM (
   SELECT MAX(id) FROM autoconfirmado
 ) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
-SELECT setval('tipo_de_dato_id_seq', (SELECT MAX(id) FROM tipo_de_dato));
 SELECT setval('sismografo_id_seq', (SELECT MAX(id) FROM sismografo));
 SELECT setval('usuario_id_seq', (SELECT MAX(id) FROM usuario));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));

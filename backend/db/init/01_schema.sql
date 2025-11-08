@@ -66,8 +66,7 @@ CREATE TABLE IF NOT EXISTS origen_de_generacion (
 
 -- 6) TIPO_DE_DATO
 CREATE TABLE IF NOT EXISTS tipo_de_dato (
-    id BIGSERIAL PRIMARY KEY,
-    denominacion VARCHAR(100) NOT NULL,
+    denominacion VARCHAR(100) PRIMARY KEY,
     nombre_unidad_medida VARCHAR(100) NOT NULL,
     valor_umbral NUMERIC(4, 2) NOT NULL
 );
@@ -149,9 +148,9 @@ CREATE TABLE IF NOT EXISTS muestra_sismica (
 CREATE TABLE IF NOT EXISTS detalle_muestra_sismica (
     id BIGSERIAL PRIMARY KEY,
     valor VARCHAR(255) NOT NULL,
-    tipo_dato_id BIGINT,
+    tipo_dato_denominacion VARCHAR(100),
     muestra_sismica_id BIGINT,
-    CONSTRAINT fk_detalle_tipo_dato FOREIGN KEY (tipo_dato_id) REFERENCES tipo_de_dato(id),
+    CONSTRAINT fk_detalle_tipo_dato FOREIGN KEY (tipo_dato_denominacion) REFERENCES tipo_de_dato(denominacion),
     CONSTRAINT fk_detalle_muestra FOREIGN KEY (muestra_sismica_id) REFERENCES muestra_sismica(id) ON DELETE CASCADE
 );
 
