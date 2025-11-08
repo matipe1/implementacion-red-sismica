@@ -5,8 +5,8 @@ import java.util.List;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
 
-public interface IServicioRegistroRevision {
+public interface IGestorRegistroRevision {
     public List<EventoSismicoDTO> opcionRegistrarRevisionManual();
-    public EventoSismicoDetalleDTO tomarSeleccionDeEvento(Long eventoId);
-    public void tomarRechazoDeEvento(Long eventoId);
+    public EventoSismicoDetalleDTO tomarSeleccionDeEvento(EventoSismicoDTO eventoDTO);
+    public void tomarRechazoDeEvento(EventoSismicoDTO eventoDTO);
 }
