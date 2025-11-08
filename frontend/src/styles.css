@@ -1,0 +1,16 @@
+.tableCss {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  vertical-align: top;
+  border-collapse: collapse;
+}
+.tableCss th,
+.tableCss td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+}
+.table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
