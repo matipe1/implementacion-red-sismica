@@ -23,7 +23,7 @@ public class Usuario {
     private String contraseña;
 
     @OneToOne
-    @JoinColumn(name = "empleado_id", foreignKey = @ForeignKey(name = "fk_usuario_empleado"))
+    @JoinColumn(name = "empleado_mail", foreignKey = @ForeignKey(name = "fk_usuario_empleado"))
     private Empleado empleado;
 
     public Empleado getASLogueado() {

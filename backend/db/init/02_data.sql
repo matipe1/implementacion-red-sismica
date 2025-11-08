@@ -7,11 +7,11 @@ SET search_path TO public;
 -- =========================================================
 -- 1) EMPLEADOS
 -- =========================================================
-INSERT INTO empleado (nombre, apellido, mail, telefono) VALUES
-('Ana', 'Gomez', 'anagomez@gmail.com', '+543511234567'),
-('Luis', 'Paz', 'luispaz@gmail.com', '+543511234567'),
-('Juan', 'Perez', 'juanperez@gmail.com', '+543511234567'),
-('Maravilla', 'Martinez', 'maravilla@gmail.com', '+543511234567');
+INSERT INTO empleado (mail, nombre, apellido, telefono) VALUES
+('anagomez@gmail.com', 'Ana', 'Gomez', '+543511234567'),
+('luispaz@gmail.com', 'Luis', 'Paz', '+543511234567'),
+('juanperez@gmail.com', 'Juan', 'Perez', '+543511234567'),
+('maravilla@gmail.com', 'Maravilla', 'Martinez', '+543511234567');
 
 -- =====================================================
 -- ESTADOS CREADOS DINÁMICAMENTE (como si la app los hubiera generado)
@@ -59,8 +59,8 @@ INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, 
 -- =========================================================
 -- 6) USUARIO Y SESIÓN (para simular empleado logueado)
 -- =========================================================
-INSERT INTO usuario (nombre_usuario, contrasena, empleado_id)
-VALUES ('admin', 'admin123', 4);
+INSERT INTO usuario (nombre_usuario, contrasena, empleado_mail)
+VALUES ('admin', 'admin123', 'maravilla@gmail.com');
 
 INSERT INTO sesion (fecha_hora, usuario_id)
 VALUES (NOW(), 1);
@@ -70,7 +70,7 @@ VALUES (NOW(), 1);
 INSERT INTO evento_sismico (
     fecha_hora_ocurrencia, fecha_hora_fin,
     latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro,
-    valor_magnitud, analista_supervisor_id, estado_actual_id,
+    valor_magnitud, analista_supervisor_mail, estado_actual_id,
     clasificacion_sismo_id, origen_generacion_id, alcance_sismo_id
 ) VALUES
 -- E1, E2, E3 en autodetectado con un solo cambio de estado
@@ -78,19 +78,19 @@ INSERT INTO evento_sismico (
 ('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 2, 1, 1, 1),
 ('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, NULL, 3, 1, 1, 1),
 -- E4 en bloqueado en revision con dos cambios de estado
-('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 5, 1, 1, 1);
+('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 'luispaz@gmail.com', 5, 1, 1, 1);
 
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
 -- =========================================================
-INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_id, estado_id, evento_sismico_id) VALUES
+INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_mail, estado_id, evento_sismico_id) VALUES
 -- E1, E2 y E3 en autodetectado con un solo cambio
 ('2024-04-05 12:30:00', NULL, NULL, 1, 1),
 ('2024-04-07 09:45:00', NULL, NULL, 2, 2),
 ('2024-04-10 15:10:00', NULL, NULL, 3, 3),
 -- E4 en bloqueado en revision con dos cambios (autodetectado → bloqueado en revisión)
 ('2024-04-14 07:20:00', '2024-04-14 08:00:00', NULL, 4, 4),
-('2024-04-14 08:00:00', NULL, 2, 5, 4);
+('2024-04-14 08:00:00', NULL, NULL, 5, 4);
 
 -- =========================================================
 -- 9) SERIES TEMPORALES, MUESTRAS
@@ -199,7 +199,6 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VA
 -- =========================================================
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
-SELECT setval('empleado_id_seq', (SELECT MAX(id) FROM empleado));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM (
   SELECT MAX(id) FROM autodetectado
   UNION ALL

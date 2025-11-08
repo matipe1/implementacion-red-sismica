@@ -60,7 +60,7 @@ public class EventoSismico {
     private AlcanceSismo alcanceSismo;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "analista_supervisor_id", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
+    @JoinColumn(name = "analista_supervisor_mail", foreignKey = @ForeignKey(name = "fk_evento_empleado"))
     private Empleado analistaSupervisor;
     
     @ManyToOne(fetch = FetchType.LAZY)
