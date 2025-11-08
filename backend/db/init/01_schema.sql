@@ -74,8 +74,7 @@ CREATE TABLE IF NOT EXISTS tipo_de_dato (
 
 -- 7) ESTACION_SISMOLOGICA
 CREATE TABLE IF NOT EXISTS estacion_sismologica (
-    id BIGSERIAL PRIMARY KEY,
-    codigo_estacion INTEGER NOT NULL UNIQUE
+    codigo_estacion INTEGER PRIMARY KEY
 );
 
 -- =========================================================
@@ -88,8 +87,8 @@ CREATE TABLE IF NOT EXISTS sismografo (
     nro_serie INTEGER NOT NULL UNIQUE,
     identificador_sismografo INTEGER NOT NULL UNIQUE,
     fecha_adquisicion DATE NOT NULL,
-    estacion_sismologica_id BIGINT,
-    CONSTRAINT fk_sismografo_estacion FOREIGN KEY (estacion_sismologica_id) REFERENCES estacion_sismologica(id)
+    estacion_sismologica_codigo INTEGER,
+    CONSTRAINT fk_sismografo_estacion FOREIGN KEY (estacion_sismologica_codigo) REFERENCES estacion_sismologica(codigo_estacion)
 );
 
 -- 9) EVENTO_SISMICO

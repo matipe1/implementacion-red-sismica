@@ -29,7 +29,7 @@ public class Sismografo {
     private LocalDate fechaAdquisicion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estacion_sismologica_id", foreignKey = @ForeignKey(name = "fk_sismografo_estacion"))
+    @JoinColumn(name = "estacion_sismologica_codigo", foreignKey = @ForeignKey(name = "fk_sismografo_estacion"))
     private EstacionSismologica estacionSismologica;
 
     @OneToMany(mappedBy = "sismografo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

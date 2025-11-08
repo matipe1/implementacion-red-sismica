@@ -50,11 +50,12 @@ INSERT INTO tipo_de_dato (denominacion, nombre_unidad_medida, valor_umbral) VALU
 -- =========================================================
 -- 5) ESTACIONES Y SISMÓGRAFOS
 -- =========================================================
-INSERT INTO estacion_sismologica (codigo_estacion) VALUES (100), (200);
+INSERT INTO estacion_sismologica (codigo_estacion) VALUES
+(100), (200);
 
-INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, estacion_sismologica_id) VALUES
-(1001, 501, '2023-03-15', 1),
-(1002, 502, '2023-04-20', 2);
+INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, estacion_sismologica_codigo) VALUES
+(1001, 501, '2023-03-15', 100),
+(1002, 502, '2023-04-20', 200);
 
 -- =========================================================
 -- 6) USUARIO Y SESIÓN (para simular empleado logueado)
@@ -213,11 +214,7 @@ SELECT setval('estado_seq', (SELECT MAX(id) FROM (
   SELECT MAX(id) FROM autoconfirmado
 ) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
-SELECT setval('clasificacion_sismo_id_seq', (SELECT MAX(id) FROM clasificacion_sismo));
-SELECT setval('alcance_sismo_id_seq', (SELECT MAX(id) FROM alcance_sismo));
-SELECT setval('origen_de_generacion_id_seq', (SELECT MAX(id) FROM origen_de_generacion));
 SELECT setval('tipo_de_dato_id_seq', (SELECT MAX(id) FROM tipo_de_dato));
-SELECT setval('estacion_sismologica_id_seq', (SELECT MAX(id) FROM estacion_sismologica));
 SELECT setval('sismografo_id_seq', (SELECT MAX(id) FROM sismografo));
 SELECT setval('usuario_id_seq', (SELECT MAX(id) FROM usuario));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
