@@ -60,8 +60,7 @@ CREATE TABLE IF NOT EXISTS alcance_sismo (
 
 -- 5) ORIGEN_DE_GENERACION
 CREATE TABLE IF NOT EXISTS origen_de_generacion (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) PRIMARY KEY,
     descripcion VARCHAR(255)
 );
 
@@ -106,11 +105,11 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     analista_supervisor_mail VARCHAR(150),
     estado_actual_id BIGINT,
     clasificacion_sismo_nombre VARCHAR(100),
-    origen_generacion_id BIGINT,
+    origen_generacion_nombre VARCHAR(100),
     alcance_sismo_nombre VARCHAR(100),
     CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_mail) REFERENCES empleado(mail),
     CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_nombre) REFERENCES clasificacion_sismo(nombre),
-    CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_id) REFERENCES origen_de_generacion(id),
+    CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_nombre) REFERENCES origen_de_generacion(nombre),
     CONSTRAINT fk_evento_alcance FOREIGN KEY (alcance_sismo_nombre) REFERENCES alcance_sismo(nombre)
 );
 
