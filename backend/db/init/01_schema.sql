@@ -12,11 +12,39 @@ CREATE TABLE IF NOT EXISTS empleado (
     telefono VARCHAR(30)
 );
 
--- 2) ESTADO
-CREATE TABLE IF NOT EXISTS estado (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL UNIQUE,
-    tipo_estado VARCHAR(100) NOT NULL  -- columna para discriminar subclases
+-- 2) ESTADOS
+
+CREATE SEQUENCE estado_seq START 1 INCREMENT 1;
+
+-- Estados concretos (todas con id + nombre)
+CREATE TABLE pendiente_revision (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE pendiente (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE rechazado (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE bloqueado_en_revision (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE autoconfirmado (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE autodetectado (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
 );
 
 -- 3) CLASIFICACION_SISMO
@@ -85,7 +113,7 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     origen_generacion_id BIGINT,
     alcance_sismo_id BIGINT,
     CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_id) REFERENCES empleado(id),
-    CONSTRAINT fk_evento_estado FOREIGN KEY (estado_actual_id) REFERENCES estado(id),
+--    CONSTRAINT fk_evento_estado FOREIGN KEY (estado_actual_id) REFERENCES estado(id),
     CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_id) REFERENCES clasificacion_sismo(id),
     CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_id) REFERENCES origen_de_generacion(id),
     CONSTRAINT fk_evento_alcance FOREIGN KEY (alcance_sismo_id) REFERENCES alcance_sismo(id)
@@ -100,7 +128,7 @@ CREATE TABLE IF NOT EXISTS cambio_estado (
     estado_id BIGINT,
     evento_sismico_id BIGINT,
     CONSTRAINT fk_cambio_estado_empleado FOREIGN KEY (responsable_inspeccion_id) REFERENCES empleado(id),
-    CONSTRAINT fk_cambio_estado_estado FOREIGN KEY (estado_id) REFERENCES estado(id),
+--    CONSTRAINT fk_cambio_estado_estado FOREIGN KEY (estado_id) REFERENCES estado(id),
     CONSTRAINT fk_cambio_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE
 );
 

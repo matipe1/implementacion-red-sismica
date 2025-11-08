@@ -126,21 +126,17 @@ public class GestorRegistroRevision {
     }
 
     private void bloquearEventoSismico(EventoSismico evento) {
-        // NO DEBERIA BUSCAR EL ESTADO EL GESTOR (SERVICIO)
-        Estado estadoBloqueadoEnRevision = this.buscarEstadoBloqueadoEnRevision(evento);
 
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
-        evento.bloquear(fechaHoraActual, estadoBloqueadoEnRevision);
+        evento.bloquear(fechaHoraActual);
     }
 
     private void rechazarEventoSismico(EventoSismico evento) {
-        // NO DEBERIA BUSCAR EL ESTADO EL GESTOR (SERVICIO)
-        Estado estadoRechazado = this.buscarEstadoRechazado(evento);
-        //
+
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
         Empleado empleadoLogueado = this.buscarASLogueado();
 
-        evento.rechazar(fechaHoraActual, empleadoLogueado, estadoRechazado);
+        evento.rechazar(fechaHoraActual, empleadoLogueado);
     }
 
     private void llamarCUGenerarSismograma(List<SerieTemporalDTO> seriesTemporalesClasificadas) {

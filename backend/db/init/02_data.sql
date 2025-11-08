@@ -16,13 +16,19 @@ INSERT INTO empleado (nombre, apellido, mail, telefono) VALUES
 -- =========================================================
 -- 2) ESTADOS
 -- =========================================================
-INSERT INTO estado (nombre, tipo_estado) VALUES
-('Autodetectado', 'AUTODETECTADO'),
-('Bloqueado en revisión', 'BLOQUEADO_EN_REVISION'),
-('Rechazado', 'RECHAZADO'),
-('Autoconfirmado', 'AUTOCONFIRMADO'),
-('Pendiente de revisión', 'PENDIENTE_REVISION'),
-('Pendiente', 'PENDIENTE');
+--INSERT INTO estado (nombre, tipo_estado) VALUES
+--('Autodetectado', 'AUTODETECTADO'),
+--('Bloqueado en revisión', 'BLOQUEADO_EN_REVISION'),
+--('Rechazado', 'RECHAZADO'),
+--('Autoconfirmado', 'AUTOCONFIRMADO'),
+--('Pendiente de revisión', 'PENDIENTE_REVISION'),
+--('Pendiente', 'PENDIENTE');
+
+-- =====================================================
+-- ESTADO INICIAL (Autodetectado)
+-- =====================================================
+INSERT INTO autodetectado (id, nombre)
+VALUES (1, 'Autodetectado');
 
 -- =========================================================
 -- 3) CLASIFICACIÓN, ALCANCE Y ORIGEN
@@ -74,22 +80,22 @@ INSERT INTO evento_sismico (
 ) VALUES
 ('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 1, 1, 1),
 ('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 1, 1, 1, 1),
-('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, 1, 4, 1, 1, 1),
-('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 3, 1, 1, 1);
+('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, 1, 1, 1, 1, 1),
+('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 1, 1, 1, 1);
 
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
 -- =========================================================
 INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_id, estado_id, evento_sismico_id) VALUES
 -- Evento 1
-('2024-04-05 12:30:00', '2024-04-06 08:00:00', 1, 6, 1),
+('2024-04-05 12:30:00', '2024-04-06 08:00:00', 1, 1, 1),
 ('2024-04-06 08:00:00', NULL, NULL, 1, 1),
 -- Evento 2
 ('2024-04-06 09:00:00', NULL, NULL, 1, 2),
 -- Evento 3
-('2024-04-10 15:00:00', NULL, NULL, 4, 3),
+('2024-04-10 15:00:00', NULL, NULL, 1, 3),
 -- Evento 4
-('2024-04-14 08:00:00', NULL, 2, 3, 4);
+('2024-04-14 08:00:00', NULL, 2, 1, 4);
 
 
 -- =========================================================
@@ -200,7 +206,8 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VA
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
 SELECT setval('empleado_id_seq', (SELECT MAX(id) FROM empleado));
-SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+--SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
 SELECT setval('clasificacion_sismo_id_seq', (SELECT MAX(id) FROM clasificacion_sismo));
 SELECT setval('alcance_sismo_id_seq', (SELECT MAX(id) FROM alcance_sismo));
 SELECT setval('origen_de_generacion_id_seq', (SELECT MAX(id) FROM origen_de_generacion));
