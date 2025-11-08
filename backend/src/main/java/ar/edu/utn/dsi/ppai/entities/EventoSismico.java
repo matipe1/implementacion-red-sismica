@@ -56,7 +56,7 @@ public class EventoSismico {
     private OrigenDeGeneracion origenDeGeneracion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "alcance_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_alcance"))
+    @JoinColumn(name = "alcance_sismo_nombre", foreignKey = @ForeignKey(name = "fk_evento_alcance"))
     private AlcanceSismo alcanceSismo;
     
     @ManyToOne(fetch = FetchType.LAZY)
