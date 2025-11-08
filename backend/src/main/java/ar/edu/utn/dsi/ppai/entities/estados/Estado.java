@@ -12,14 +12,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "estado")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_estado", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @NoArgsConstructor
 public abstract class Estado {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "estado_seq")
+    @SequenceGenerator(name = "estado_seq", sequenceName = "estado_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "nombre", unique = true, nullable = false, length = 100)
@@ -35,13 +35,13 @@ public abstract class Estado {
         );
     }
 
-    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoBloqueado) {
+    public void bloquear(LocalDateTime fechaHoraActual, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         throw new UnsupportedOperationException(
             "No se puede bloquear el evento en este estado."
         );
     }
 
-    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico, Estado estadoRechazado) {
+    public void rechazar(LocalDateTime fechaHoraActual, Empleado responsableInspeccion, List<CambioEstado> cambioEstados, EventoSismico eventoSismico) {
         throw new UnsupportedOperationException(
             "No se puede rechazar el evento en este estado."
         );

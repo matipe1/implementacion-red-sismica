@@ -13,16 +13,19 @@ INSERT INTO empleado (nombre, apellido, mail, telefono) VALUES
 ('Juan', 'Perez', 'juanperez@gmail.com', '+543511234567'),
 ('Maravilla', 'Martinez', 'maravilla@gmail.com', '+543511234567');
 
--- =========================================================
--- 2) ESTADOS
--- =========================================================
-INSERT INTO estado (nombre, tipo_estado) VALUES
-('Autodetectado', 'AUTODETECTADO'),
-('Bloqueado en revisión', 'BLOQUEADO_EN_REVISION'),
-('Rechazado', 'RECHAZADO'),
-('Autoconfirmado', 'AUTOCONFIRMADO'),
-('Pendiente de revisión', 'PENDIENTE_REVISION'),
-('Pendiente', 'PENDIENTE');
+-- =====================================================
+-- ESTADOS CREADOS DINÁMICAMENTE (como si la app los hubiera generado)
+-- =====================================================
+-- Estados iniciales (autodetectado) para cada evento
+INSERT INTO autodetectado (id, nombre) VALUES
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado');
+
+-- Estado adicional para el evento 4 (bloqueado en revisión)
+INSERT INTO bloqueado_en_revision (id, nombre) VALUES
+(nextval('estado_seq'), 'Bloqueado en revisión');
 
 -- =========================================================
 -- 3) CLASIFICACIÓN, ALCANCE Y ORIGEN
@@ -61,36 +64,33 @@ VALUES ('admin', 'admin123', 4);
 
 INSERT INTO sesion (fecha_hora, usuario_id)
 VALUES (NOW(), 1);
-
 -- =========================================================
 -- 7) EVENTOS SÍSMICOS
--- (1 y 2 autodetectados, 3 autoconfirmado y 4 rechazado)
 -- =========================================================
 INSERT INTO evento_sismico (
     fecha_hora_ocurrencia, fecha_hora_fin,
-    latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro, 
+    latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro,
     valor_magnitud, analista_supervisor_id, estado_actual_id,
     clasificacion_sismo_id, origen_generacion_id, alcance_sismo_id
 ) VALUES
+-- E1, E2, E3 en autodetectado con un solo cambio de estado
 ('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 1, 1, 1),
-('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 1, 1, 1, 1),
-('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, 1, 4, 1, 1, 1),
-('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 3, 1, 1, 1);
+('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 2, 1, 1, 1),
+('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, NULL, 3, 1, 1, 1),
+-- E4 en bloqueado en revision con dos cambios de estado
+('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 5, 1, 1, 1);
 
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
 -- =========================================================
 INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_id, estado_id, evento_sismico_id) VALUES
--- Evento 1
-('2024-04-05 12:30:00', '2024-04-06 08:00:00', 1, 6, 1),
-('2024-04-06 08:00:00', NULL, NULL, 1, 1),
--- Evento 2
-('2024-04-06 09:00:00', NULL, NULL, 1, 2),
--- Evento 3
-('2024-04-10 15:00:00', NULL, NULL, 4, 3),
--- Evento 4
-('2024-04-14 08:00:00', NULL, 2, 3, 4);
-
+-- E1, E2 y E3 en autodetectado con un solo cambio
+('2024-04-05 12:30:00', NULL, NULL, 1, 1),
+('2024-04-07 09:45:00', NULL, NULL, 2, 2),
+('2024-04-10 15:10:00', NULL, NULL, 3, 3),
+-- E4 en bloqueado en revision con dos cambios (autodetectado → bloqueado en revisión)
+('2024-04-14 07:20:00', '2024-04-14 08:00:00', NULL, 4, 4),
+('2024-04-14 08:00:00', NULL, 2, 5, 4);
 
 -- =========================================================
 -- 9) SERIES TEMPORALES, MUESTRAS
@@ -200,7 +200,8 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VA
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
 SELECT setval('empleado_id_seq', (SELECT MAX(id) FROM empleado));
-SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+--SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
 SELECT setval('clasificacion_sismo_id_seq', (SELECT MAX(id) FROM clasificacion_sismo));
 SELECT setval('alcance_sismo_id_seq', (SELECT MAX(id) FROM alcance_sismo));
 SELECT setval('origen_de_generacion_id_seq', (SELECT MAX(id) FROM origen_de_generacion));

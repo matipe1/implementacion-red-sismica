@@ -23,6 +23,7 @@ import ar.edu.utn.dsi.ppai.entities.dtos.EventoSismicoDetalleDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.MuestraSismicaDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.SerieTemporalDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.TipoDeDatoDTO;
+import ar.edu.utn.dsi.ppai.entities.estados.AutoDetectado;
 import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 import ar.edu.utn.dsi.ppai.repositories.EstadoRepository;
 import ar.edu.utn.dsi.ppai.repositories.EventoSismicoRepository;
@@ -111,12 +112,8 @@ public class GestorRegistroRevision {
     }
 
     private Stream<EventoSismicoDTO> buscarEventosAutoDetectados() {
-        Estado estadoAutodetectado = estadoRepository.findByNombre("Autodetectado")
-                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Autodetectado' no existe en la base de datos."));
-
-        List<EventoSismico> eventosAutodetectados = eventoSismicoRepository.findByEstadoActual(estadoAutodetectado);
-        return eventosAutodetectados.stream()
-            .map(evento -> this.construirEventoSismicoDTO(evento));
+        return eventoSismicoRepository.findByEstadoActualInstanceOf(AutoDetectado.class).stream()
+            .map(this::construirEventoSismicoDTO);
     }
 
     private List<EventoSismicoDTO> ordenarEventosSismicos(Stream<EventoSismicoDTO> eventosDesordenados) {
@@ -126,21 +123,17 @@ public class GestorRegistroRevision {
     }
 
     private void bloquearEventoSismico(EventoSismico evento) {
-        // NO DEBERIA BUSCAR EL ESTADO EL GESTOR (SERVICIO)
-        Estado estadoBloqueadoEnRevision = this.buscarEstadoBloqueadoEnRevision(evento);
 
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
-        evento.bloquear(fechaHoraActual, estadoBloqueadoEnRevision);
+        evento.bloquear(fechaHoraActual);
     }
 
     private void rechazarEventoSismico(EventoSismico evento) {
-        // NO DEBERIA BUSCAR EL ESTADO EL GESTOR (SERVICIO)
-        Estado estadoRechazado = this.buscarEstadoRechazado(evento);
-        //
+
         LocalDateTime fechaHoraActual = this.obtenerFechaHoraActual();
         Empleado empleadoLogueado = this.buscarASLogueado();
 
-        evento.rechazar(fechaHoraActual, empleadoLogueado, estadoRechazado);
+        evento.rechazar(fechaHoraActual, empleadoLogueado);
     }
 
     private void llamarCUGenerarSismograma(List<SerieTemporalDTO> seriesTemporalesClasificadas) {
@@ -211,15 +204,15 @@ public class GestorRegistroRevision {
 
 
     // Se deberian borrar cuando arreglemos el tema del patron state
-    private Estado buscarEstadoBloqueadoEnRevision(EventoSismico evento) {
-        return estadoRepository.findByNombre("Bloqueado en revisión")
-                    .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
-    }
+    // private Estado buscarEstadoBloqueadoEnRevision(EventoSismico evento) {
+    //     return estadoRepository.findByNombre("Bloqueado en revisión")
+    //                 .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
+    // }
 
-    private Estado buscarEstadoRechazado(EventoSismico evento) {
-        return estadoRepository.findByNombre("Rechazado")
-            .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
-    }
+    // private Estado buscarEstadoRechazado(EventoSismico evento) {
+    //     return estadoRepository.findByNombre("Rechazado")
+    //         .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
+    // }
 
     // Prueba (tambien se deberia borrar)
     private List<CambioEstadoDTO> cambiosEstadoPrueba(EventoSismico eventoSeleccionado) {

@@ -23,7 +23,6 @@ public interface EventoSismicoRepository extends JpaRepository<EventoSismico, Lo
         AND e.latitudHipocentro = :latHip
         AND e.longitudHipocentro = :lonHip
         AND e.valorMagnitud = :valor
-
     """)
     Optional<EventoSismico> findByDatosBase(
       @Param("fechaHoraOcurrencia") LocalDateTime fechaHoraOcurrencia,
@@ -33,4 +32,7 @@ public interface EventoSismicoRepository extends JpaRepository<EventoSismico, Lo
       @Param("lonHip") BigDecimal lonHip,
       @Param("valor") BigDecimal valor
     );
+
+    @Query("SELECT e FROM EventoSismico e WHERE TYPE(e.estadoActual) = :tipoEstado")
+    List<EventoSismico> findByEstadoActualInstanceOf(@Param("tipoEstado") Class<? extends Estado> tipoEstado);
 }
