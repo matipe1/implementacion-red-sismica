@@ -82,9 +82,8 @@ CREATE TABLE IF NOT EXISTS estacion_sismologica (
 
 -- 8) SISMOGRAFO
 CREATE TABLE IF NOT EXISTS sismografo (
-    id BIGSERIAL PRIMARY KEY,
     nro_serie INTEGER NOT NULL UNIQUE,
-    identificador_sismografo INTEGER NOT NULL UNIQUE,
+    identificador_sismografo INTEGER PRIMARY KEY,
     fecha_adquisicion DATE NOT NULL,
     estacion_sismologica_codigo INTEGER,
     CONSTRAINT fk_sismografo_estacion FOREIGN KEY (estacion_sismologica_codigo) REFERENCES estacion_sismologica(codigo_estacion)
@@ -131,9 +130,9 @@ CREATE TABLE IF NOT EXISTS serie_temporal (
     fecha_hora_registro TIMESTAMP NOT NULL,
     alerta_alarma BOOLEAN NOT NULL,
     evento_sismico_id BIGINT,
-    sismografo_id BIGINT,
+    sismografo_identificador INTEGER,
     CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE,
-    CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_id) REFERENCES sismografo(id)
+    CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_identificador) REFERENCES sismografo(identificador_sismografo)
 );
 
 -- 12) MUESTRA_SISMICA

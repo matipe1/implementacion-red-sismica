@@ -16,14 +16,11 @@ import java.util.List;
 public class Sismografo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "identificador_sismografo", nullable = false, unique = true)
+    private Integer identificadorSismografo;
 
     @Column(name = "nro_serie", nullable = false, unique = true)
     private Integer nroSerie;
-
-    @Column(name = "identificador_sismografo", nullable = false, unique = true)
-    private Integer identificadorSismografo;
 
     @Column(name = "fecha_adquisicion", nullable = false)
     private LocalDate fechaAdquisicion;

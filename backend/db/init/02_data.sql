@@ -96,19 +96,19 @@ INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspe
 -- =========================================================
 -- 9) SERIES TEMPORALES, MUESTRAS
 -- =========================================================
-INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_id) VALUES
+INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_identificador) VALUES
 -- Evento 1
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 1),
-('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 501),
+('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 502),
 -- Evento 2
-('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 1),
-('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 2),
+('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 501),
+('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 502),
 -- Evento 3
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 1),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 502),
 -- Evento 4
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 1),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 2);
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 502);
 
 
 INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
@@ -214,7 +214,6 @@ SELECT setval('estado_seq', (SELECT MAX(id) FROM (
   SELECT MAX(id) FROM autoconfirmado
 ) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
-SELECT setval('sismografo_id_seq', (SELECT MAX(id) FROM sismografo));
 SELECT setval('usuario_id_seq', (SELECT MAX(id) FROM usuario));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
 SELECT setval('evento_sismico_id_seq', (SELECT MAX(id) FROM evento_sismico));
