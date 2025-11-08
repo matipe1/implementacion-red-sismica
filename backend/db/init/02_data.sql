@@ -200,7 +200,19 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VA
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
 SELECT setval('empleado_id_seq', (SELECT MAX(id) FROM empleado));
---SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+SELECT setval('estado_seq', (SELECT MAX(id) FROM (
+  SELECT MAX(id) FROM autodetectado
+  UNION ALL
+  SELECT MAX(id) FROM bloqueado_en_revision
+  UNION ALL
+  SELECT MAX(id) FROM pendiente
+  UNION ALL
+  SELECT MAX(id) FROM pendiente_revision
+  UNION ALL
+  SELECT MAX(id) FROM rechazado
+  UNION ALL
+  SELECT MAX(id) FROM autoconfirmado
+) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
 SELECT setval('clasificacion_sismo_id_seq', (SELECT MAX(id) FROM clasificacion_sismo));
 SELECT setval('alcance_sismo_id_seq', (SELECT MAX(id) FROM alcance_sismo));
