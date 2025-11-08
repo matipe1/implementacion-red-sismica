@@ -7,28 +7,25 @@ SET search_path TO public;
 -- =========================================================
 -- 1) EMPLEADOS
 -- =========================================================
-INSERT INTO empleado (nombre, apellido, mail, telefono) VALUES
-('Ana', 'Gomez', 'anagomez@gmail.com', '+543511234567'),
-('Luis', 'Paz', 'luispaz@gmail.com', '+543511234567'),
-('Juan', 'Perez', 'juanperez@gmail.com', '+543511234567'),
-('Maravilla', 'Martinez', 'maravilla@gmail.com', '+543511234567');
-
--- =========================================================
--- 2) ESTADOS
--- =========================================================
---INSERT INTO estado (nombre, tipo_estado) VALUES
---('Autodetectado', 'AUTODETECTADO'),
---('Bloqueado en revisión', 'BLOQUEADO_EN_REVISION'),
---('Rechazado', 'RECHAZADO'),
---('Autoconfirmado', 'AUTOCONFIRMADO'),
---('Pendiente de revisión', 'PENDIENTE_REVISION'),
---('Pendiente', 'PENDIENTE');
+INSERT INTO empleado (mail, nombre, apellido, telefono) VALUES
+('anagomez@gmail.com', 'Ana', 'Gomez', '+543511234567'),
+('luispaz@gmail.com', 'Luis', 'Paz', '+543511234567'),
+('juanperez@gmail.com', 'Juan', 'Perez', '+543511234567'),
+('maravilla@gmail.com', 'Maravilla', 'Martinez', '+543511234567');
 
 -- =====================================================
--- ESTADO INICIAL (Autodetectado)
+-- ESTADOS CREADOS DINÁMICAMENTE (como si la app los hubiera generado)
 -- =====================================================
-INSERT INTO autodetectado (id, nombre)
-VALUES (1, 'Autodetectado');
+-- Estados iniciales (autodetectado) para cada evento
+INSERT INTO autodetectado (id, nombre) VALUES
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado'),
+(nextval('estado_seq'), 'Autodetectado');
+
+-- Estado adicional para el evento 4 (bloqueado en revisión)
+INSERT INTO bloqueado_en_revision (id, nombre) VALUES
+(nextval('estado_seq'), 'Bloqueado en revisión');
 
 -- =========================================================
 -- 3) CLASIFICACIÓN, ALCANCE Y ORIGEN
@@ -53,67 +50,65 @@ INSERT INTO tipo_de_dato (denominacion, nombre_unidad_medida, valor_umbral) VALU
 -- =========================================================
 -- 5) ESTACIONES Y SISMÓGRAFOS
 -- =========================================================
-INSERT INTO estacion_sismologica (codigo_estacion) VALUES (100), (200);
+INSERT INTO estacion_sismologica (codigo_estacion) VALUES
+(100), (200);
 
-INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, estacion_sismologica_id) VALUES
-(1001, 501, '2023-03-15', 1),
-(1002, 502, '2023-04-20', 2);
+INSERT INTO sismografo (nro_serie, identificador_sismografo, fecha_adquisicion, estacion_sismologica_codigo) VALUES
+(1001, 501, '2023-03-15', 100),
+(1002, 502, '2023-04-20', 200);
 
 -- =========================================================
 -- 6) USUARIO Y SESIÓN (para simular empleado logueado)
 -- =========================================================
-INSERT INTO usuario (nombre_usuario, contrasena, empleado_id)
-VALUES ('admin', 'admin123', 4);
+INSERT INTO usuario (nombre_usuario, contrasena, empleado_mail)
+VALUES ('admin', 'admin123', 'maravilla@gmail.com');
 
-INSERT INTO sesion (fecha_hora, usuario_id)
-VALUES (NOW(), 1);
-
+INSERT INTO sesion (fecha_hora, usuario_nombre)
+VALUES (NOW(), 'admin');
 -- =========================================================
 -- 7) EVENTOS SÍSMICOS
--- (1 y 2 autodetectados, 3 autoconfirmado y 4 rechazado)
 -- =========================================================
 INSERT INTO evento_sismico (
     fecha_hora_ocurrencia, fecha_hora_fin,
-    latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro, 
-    valor_magnitud, analista_supervisor_id, estado_actual_id,
-    clasificacion_sismo_id, origen_generacion_id, alcance_sismo_id
+    latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro,
+    valor_magnitud, analista_supervisor_mail, estado_actual_id,
+    clasificacion_sismo_nombre, origen_generacion_nombre, alcance_sismo_nombre
 ) VALUES
-('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 1, 1, 1),
-('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 1, 1, 1, 1),
-('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, 1, 1, 1, 1, 1),
-('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 2, 1, 1, 1, 1);
+-- E1, E2, E3 en autodetectado con un solo cambio de estado
+('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 'Superficial', 'Interplaca', 'Local'),
+('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 2, 'Superficial', 'Interplaca', 'Local'),
+('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, NULL, 3, 'Superficial', 'Interplaca', 'Local'),
+-- E4 en bloqueado en revision con dos cambios de estado
+('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 'luispaz@gmail.com', 5, 'Superficial', 'Interplaca', 'Local');
 
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
 -- =========================================================
-INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_id, estado_id, evento_sismico_id) VALUES
--- Evento 1
-('2024-04-05 12:30:00', '2024-04-06 08:00:00', 1, 1, 1),
-('2024-04-06 08:00:00', NULL, NULL, 1, 1),
--- Evento 2
-('2024-04-06 09:00:00', NULL, NULL, 1, 2),
--- Evento 3
-('2024-04-10 15:00:00', NULL, NULL, 1, 3),
--- Evento 4
-('2024-04-14 08:00:00', NULL, 2, 1, 4);
-
+INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_mail, estado_id, evento_sismico_id) VALUES
+-- E1, E2 y E3 en autodetectado con un solo cambio
+('2024-04-05 12:30:00', NULL, NULL, 1, 1),
+('2024-04-07 09:45:00', NULL, NULL, 2, 2),
+('2024-04-10 15:10:00', NULL, NULL, 3, 3),
+-- E4 en bloqueado en revision con dos cambios (autodetectado → bloqueado en revisión)
+('2024-04-14 07:20:00', '2024-04-14 08:00:00', NULL, 4, 4),
+('2024-04-14 08:00:00', NULL, NULL, 5, 4);
 
 -- =========================================================
 -- 9) SERIES TEMPORALES, MUESTRAS
 -- =========================================================
-INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_id) VALUES
+INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_identificador) VALUES
 -- Evento 1
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 1),
-('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 501),
+('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 502),
 -- Evento 2
-('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 1),
-('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 2),
+('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 501),
+('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 502),
 -- Evento 3
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 1),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 2),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 502),
 -- Evento 4
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 1),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 2);
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 502);
 
 
 INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
@@ -161,60 +156,64 @@ INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
 -- 10) DETALLE_MUESTRA_SISMICA
 -- (72 registros: 24 muestras * 3 detalles c/u)
 -- =========================================================
-INSERT INTO detalle_muestra_sismica (valor, tipo_dato_id, muestra_sismica_id) VALUES
+INSERT INTO detalle_muestra_sismica (valor, tipo_dato_denominacion, muestra_sismica_id) VALUES
 -- Serie 1 (Evento 1 - Estación 100)
-('5.0', 1, 1), ('10.0', 2, 1), ('0.7', 3, 1),
-('5.3', 1, 2), ('10.1', 2, 2), ('0.6', 3, 2),
-('5.5', 1, 3), ('10.2', 2, 3), ('0.65', 3, 3),
+('5.0', 'Velocidad de onda', 1), ('10.0', 'Frecuencia de onda', 1), ('0.7', 'Longitud de onda', 1),
+('5.3', 'Velocidad de onda', 2), ('10.1', 'Frecuencia de onda', 2), ('0.6', 'Longitud de onda', 2),
+('5.5', 'Velocidad de onda', 3), ('10.2', 'Frecuencia de onda', 3), ('0.65', 'Longitud de onda', 3),
 
 -- Serie 2 (Evento 1 - Estación 200)
-('4.8', 1, 4), ('12.0', 2, 4), ('0.6', 3, 4),
-('4.9', 1, 5), ('11.8', 2, 5), ('0.62', 3, 5),
-('5.1', 1, 6), ('11.6', 2, 6), ('0.64', 3, 6),
+('4.8', 'Velocidad de onda', 4), ('12.0', 'Frecuencia de onda', 4), ('0.6', 'Longitud de onda', 4),
+('4.9', 'Velocidad de onda', 5), ('11.8', 'Frecuencia de onda', 5), ('0.62', 'Longitud de onda', 5),
+('5.1', 'Velocidad de onda', 6), ('11.6', 'Frecuencia de onda', 6), ('0.64', 'Longitud de onda', 6),
 
 -- Serie 3 (Evento 2 - Estación 100)
-('6.0', 1, 7), ('13.0', 2, 7), ('0.75', 3, 7),
-('6.2', 1, 8), ('12.9', 2, 8), ('0.70', 3, 8),
-('6.3', 1, 9), ('12.7', 2, 9), ('0.72', 3, 9),
+('6.0', 'Velocidad de onda', 7), ('13.0', 'Frecuencia de onda', 7), ('0.75', 'Longitud de onda', 7),
+('6.2', 'Velocidad de onda', 8), ('12.9', 'Frecuencia de onda', 8), ('0.70', 'Longitud de onda', 8),
+('6.3', 'Velocidad de onda', 9), ('12.7', 'Frecuencia de onda', 9), ('0.72', 'Longitud de onda', 9),
 
 -- Serie 4 (Evento 2 - Estación 200)
-('4.7', 1, 10), ('11.9', 2, 10), ('0.66', 3, 10),
-('4.9', 1, 11), ('11.7', 2, 11), ('0.68', 3, 11),
-('5.0', 1, 12), ('11.6', 2, 12), ('0.65', 3, 12),
+('4.7', 'Velocidad de onda', 10), ('11.9', 'Frecuencia de onda', 10), ('0.66', 'Longitud de onda', 10),
+('4.9', 'Velocidad de onda', 11), ('11.7', 'Frecuencia de onda', 11), ('0.68', 'Longitud de onda', 11),
+('5.0', 'Velocidad de onda', 12), ('11.6', 'Frecuencia de onda', 12), ('0.65', 'Longitud de onda', 12),
 
 -- Serie 5 (Evento 3 - Estación 100)
-('7.0', 1, 13), ('13.5', 2, 13), ('0.8', 3, 13),
-('7.1', 1, 14), ('13.2', 2, 14), ('0.82', 3, 14),
-('7.3', 1, 15), ('13.0', 2, 15), ('0.85', 3, 15),
+('7.0', 'Velocidad de onda', 13), ('13.5', 'Frecuencia de onda', 13), ('0.8', 'Longitud de onda', 13),
+('7.1', 'Velocidad de onda', 14), ('13.2', 'Frecuencia de onda', 14), ('0.82', 'Longitud de onda', 14),
+('7.3', 'Velocidad de onda', 15), ('13.0', 'Frecuencia de onda', 15), ('0.85', 'Longitud de onda', 15),
 
 -- Serie 6 (Evento 3 - Estación 200)
-('6.8', 1, 16), ('12.8', 2, 16), ('0.78', 3, 16),
-('6.9', 1, 17), ('12.9', 2, 17), ('0.76', 3, 17),
-('7.0', 1, 18), ('13.1', 2, 18), ('0.79', 3, 18),
+('6.8', 'Velocidad de onda', 16), ('12.8', 'Frecuencia de onda', 16), ('0.78', 'Longitud de onda', 16),
+('6.9', 'Velocidad de onda', 17), ('12.9', 'Frecuencia de onda', 17), ('0.76', 'Longitud de onda', 17),
+('7.0', 'Velocidad de onda', 18), ('13.1', 'Frecuencia de onda', 18), ('0.79', 'Longitud de onda', 18),
 
 -- Serie 7 (Evento 4 - Estación 100)
-('4.4', 1, 19), ('10.9', 2, 19), ('0.55', 3, 19),
-('4.5', 1, 20), ('11.0', 2, 20), ('0.57', 3, 20),
-('4.6', 1, 21), ('11.1', 2, 21), ('0.58', 3, 21),
+('4.4', 'Velocidad de onda', 19), ('10.9', 'Frecuencia de onda', 19), ('0.55', 'Longitud de onda', 19),
+('4.5', 'Velocidad de onda', 20), ('11.0', 'Frecuencia de onda', 20), ('0.57', 'Longitud de onda', 20),
+('4.6', 'Velocidad de onda', 21), ('11.1', 'Frecuencia de onda', 21), ('0.58', 'Longitud de onda', 21),
 
 -- Serie 8 (Evento 4 - Estación 200)
-('4.3', 1, 22), ('10.8', 2, 22), ('0.52', 3, 22),
-('4.5', 1, 23), ('11.0', 2, 23), ('0.54', 3, 23),
-('4.7', 1, 24), ('11.2', 2, 24), ('0.56', 3, 24);
+('4.3', 'Velocidad de onda', 22), ('10.8', 'Frecuencia de onda', 22), ('0.52', 'Longitud de onda', 22),
+('4.5', 'Velocidad de onda', 23), ('11.0', 'Frecuencia de onda', 23), ('0.54', 'Longitud de onda', 23),
+('4.7', 'Velocidad de onda', 24), ('11.2', 'Frecuencia de onda', 24), ('0.56', 'Longitud de onda', 24);
 
 -- =========================================================
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
-SELECT setval('empleado_id_seq', (SELECT MAX(id) FROM empleado));
---SELECT setval('estado_id_seq', (SELECT MAX(id) FROM estado));
+SELECT setval('estado_seq', (SELECT MAX(id) FROM (
+  SELECT MAX(id) FROM autodetectado
+  UNION ALL
+  SELECT MAX(id) FROM bloqueado_en_revision
+  UNION ALL
+  SELECT MAX(id) FROM pendiente
+  UNION ALL
+  SELECT MAX(id) FROM pendiente_revision
+  UNION ALL
+  SELECT MAX(id) FROM rechazado
+  UNION ALL
+  SELECT MAX(id) FROM autoconfirmado
+) t));
 SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
-SELECT setval('clasificacion_sismo_id_seq', (SELECT MAX(id) FROM clasificacion_sismo));
-SELECT setval('alcance_sismo_id_seq', (SELECT MAX(id) FROM alcance_sismo));
-SELECT setval('origen_de_generacion_id_seq', (SELECT MAX(id) FROM origen_de_generacion));
-SELECT setval('tipo_de_dato_id_seq', (SELECT MAX(id) FROM tipo_de_dato));
-SELECT setval('estacion_sismologica_id_seq', (SELECT MAX(id) FROM estacion_sismologica));
-SELECT setval('sismografo_id_seq', (SELECT MAX(id) FROM sismografo));
-SELECT setval('usuario_id_seq', (SELECT MAX(id) FROM usuario));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
 SELECT setval('evento_sismico_id_seq', (SELECT MAX(id) FROM evento_sismico));
 SELECT setval('cambio_estado_id_seq', (SELECT MAX(id) FROM cambio_estado));

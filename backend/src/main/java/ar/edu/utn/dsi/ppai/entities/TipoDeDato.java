@@ -15,10 +15,7 @@ import lombok.*;
 public class TipoDeDato {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, unique = true, length = 100)
     private String denominacion;
 
     @Column(name = "nombre_unidad_medida", nullable = false, length = 100)

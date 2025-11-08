@@ -26,7 +26,7 @@ public class InterfazRegistroRevision {
 
     @GetMapping("/eventos-autodetectados")
     public ResponseEntity<List<EventoSismicoDTO>> opcionRegistrarRevisionManual() {
-        // habilitarVentana();
+        // habilitarVentana(); -> Esto sería parte del front-end
         List<EventoSismicoDTO> eventos = gestorRegistroRevision.opcionRegistrarRevisionManual();
         return eventos.isEmpty()
                 ? ResponseEntity.noContent().build()
@@ -36,42 +36,34 @@ public class InterfazRegistroRevision {
     @PostMapping("/eventos/seleccionar")
     public ResponseEntity<?> tomarSeleccionDeEvento(@RequestBody EventoSismicoDTO eventoSeleccionado) {
         try {
-            EventoSismicoDetalleDTO eventoSeleccionadoDetallado = gestorRegistroRevision.tomarSeleccionDeEvento(
-                    eventoSeleccionado.getFechaHoraOcurrencia(),
-                    eventoSeleccionado.getLatitudEpicentro(),
-                    eventoSeleccionado.getLongitudEpicentro(),
-                    eventoSeleccionado.getLatitudHipocentro(),
-                    eventoSeleccionado.getLongitudHipocentro(),
-                    eventoSeleccionado.getValorMagnitud()
-                );
+            EventoSismicoDetalleDTO eventoSeleccionadoDetallado = gestorRegistroRevision.tomarSeleccionDeEvento(eventoSeleccionado);
             return ResponseEntity.ok(eventoSeleccionadoDetallado);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
 
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
 
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor: " + e.getMessage());
         }
     }
 
     @PostMapping("/eventos/rechazar")
-    public ResponseEntity<Void> tomarRechazoDeEvento(@RequestBody EventoSismicoDTO eventoSeleccionado) {
+    public ResponseEntity<?> tomarRechazoDeEvento(@RequestBody EventoSismicoDTO eventoSeleccionado) {
         try {
-            gestorRegistroRevision.tomarRechazoDeEvento(
-                    eventoSeleccionado.getFechaHoraOcurrencia(),
-                    eventoSeleccionado.getLatitudEpicentro(),
-                    eventoSeleccionado.getLongitudEpicentro(),
-                    eventoSeleccionado.getLatitudHipocentro(),
-                    eventoSeleccionado.getLongitudHipocentro(),
-                    eventoSeleccionado.getValorMagnitud()
-                );
-            return ResponseEntity.ok().build();
-
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+            gestorRegistroRevision.tomarRechazoDeEvento(eventoSeleccionado);
+            return ResponseEntity.ok().body("Evento rechazado correctamente.");
 
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor: " + e.getMessage());
         }
     }
 }

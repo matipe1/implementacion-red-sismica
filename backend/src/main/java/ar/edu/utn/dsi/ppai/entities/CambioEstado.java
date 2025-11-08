@@ -27,10 +27,10 @@ public class CambioEstado {
     private LocalDateTime fechaHoraHasta;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "responsable_inspeccion_id", foreignKey = @ForeignKey(name = "fk_cambio_estado_empleado"))
+    @JoinColumn(name = "responsable_inspeccion_mail", foreignKey = @ForeignKey(name = "fk_cambio_estado_empleado"))
     private Empleado responsableInspeccion;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL, optional = false )
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cambio_estado_estado"))
     private Estado estado;
 

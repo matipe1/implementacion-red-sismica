@@ -5,15 +5,13 @@
 
 -- 1) EMPLEADO
 CREATE TABLE IF NOT EXISTS empleado (
-    id BIGSERIAL PRIMARY KEY,
+    mail VARCHAR(150) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    mail VARCHAR(150) NOT NULL UNIQUE,
     telefono VARCHAR(30)
 );
 
 -- 2) ESTADOS
-
 CREATE SEQUENCE estado_seq START 1 INCREMENT 1;
 
 -- Estados concretos (todas con id + nombre)
@@ -49,38 +47,33 @@ CREATE TABLE autodetectado (
 
 -- 3) CLASIFICACION_SISMO
 CREATE TABLE IF NOT EXISTS clasificacion_sismo (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) PRIMARY KEY,
     km_profundidad_desde DOUBLE PRECISION NOT NULL,
     km_profundidad_hasta DOUBLE PRECISION NOT NULL
 );
 
 -- 4) ALCANCE_SISMO
 CREATE TABLE IF NOT EXISTS alcance_sismo (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) PRIMARY KEY,
     descripcion VARCHAR(255)
 );
 
 -- 5) ORIGEN_DE_GENERACION
 CREATE TABLE IF NOT EXISTS origen_de_generacion (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) PRIMARY KEY,
     descripcion VARCHAR(255)
 );
 
 -- 6) TIPO_DE_DATO
 CREATE TABLE IF NOT EXISTS tipo_de_dato (
-    id BIGSERIAL PRIMARY KEY,
-    denominacion VARCHAR(100) NOT NULL,
+    denominacion VARCHAR(100) PRIMARY KEY,
     nombre_unidad_medida VARCHAR(100) NOT NULL,
     valor_umbral NUMERIC(4, 2) NOT NULL
 );
 
 -- 7) ESTACION_SISMOLOGICA
 CREATE TABLE IF NOT EXISTS estacion_sismologica (
-    id BIGSERIAL PRIMARY KEY,
-    codigo_estacion INTEGER NOT NULL UNIQUE
+    codigo_estacion INTEGER PRIMARY KEY
 );
 
 -- =========================================================
@@ -89,12 +82,11 @@ CREATE TABLE IF NOT EXISTS estacion_sismologica (
 
 -- 8) SISMOGRAFO
 CREATE TABLE IF NOT EXISTS sismografo (
-    id BIGSERIAL PRIMARY KEY,
     nro_serie INTEGER NOT NULL UNIQUE,
-    identificador_sismografo INTEGER NOT NULL UNIQUE,
+    identificador_sismografo INTEGER PRIMARY KEY,
     fecha_adquisicion DATE NOT NULL,
-    estacion_sismologica_id BIGINT,
-    CONSTRAINT fk_sismografo_estacion FOREIGN KEY (estacion_sismologica_id) REFERENCES estacion_sismologica(id)
+    estacion_sismologica_codigo INTEGER,
+    CONSTRAINT fk_sismografo_estacion FOREIGN KEY (estacion_sismologica_codigo) REFERENCES estacion_sismologica(codigo_estacion)
 );
 
 -- 9) EVENTO_SISMICO
@@ -107,16 +99,15 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     latitud_hipocentro NUMERIC(9, 6) NOT NULL,
     longitud_hipocentro NUMERIC(9, 6) NOT NULL,
     valor_magnitud NUMERIC(4, 2) NOT NULL,
-    analista_supervisor_id BIGINT,
+    analista_supervisor_mail VARCHAR(150),
     estado_actual_id BIGINT,
-    clasificacion_sismo_id BIGINT,
-    origen_generacion_id BIGINT,
-    alcance_sismo_id BIGINT,
-    CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_id) REFERENCES empleado(id),
---    CONSTRAINT fk_evento_estado FOREIGN KEY (estado_actual_id) REFERENCES estado(id),
-    CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_id) REFERENCES clasificacion_sismo(id),
-    CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_id) REFERENCES origen_de_generacion(id),
-    CONSTRAINT fk_evento_alcance FOREIGN KEY (alcance_sismo_id) REFERENCES alcance_sismo(id)
+    clasificacion_sismo_nombre VARCHAR(100),
+    origen_generacion_nombre VARCHAR(100),
+    alcance_sismo_nombre VARCHAR(100),
+    CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_mail) REFERENCES empleado(mail),
+    CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_nombre) REFERENCES clasificacion_sismo(nombre),
+    CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_nombre) REFERENCES origen_de_generacion(nombre),
+    CONSTRAINT fk_evento_alcance FOREIGN KEY (alcance_sismo_nombre) REFERENCES alcance_sismo(nombre)
 );
 
 -- 10) CAMBIO_ESTADO
@@ -124,11 +115,10 @@ CREATE TABLE IF NOT EXISTS cambio_estado (
     id BIGSERIAL PRIMARY KEY,
     fecha_hora_desde TIMESTAMP NOT NULL,
     fecha_hora_hasta TIMESTAMP,
-    responsable_inspeccion_id BIGINT,
+    responsable_inspeccion_mail VARCHAR(150),
     estado_id BIGINT,
     evento_sismico_id BIGINT,
-    CONSTRAINT fk_cambio_estado_empleado FOREIGN KEY (responsable_inspeccion_id) REFERENCES empleado(id),
---    CONSTRAINT fk_cambio_estado_estado FOREIGN KEY (estado_id) REFERENCES estado(id),
+    CONSTRAINT fk_cambio_estado_empleado FOREIGN KEY (responsable_inspeccion_mail) REFERENCES empleado(mail),
     CONSTRAINT fk_cambio_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE
 );
 
@@ -140,9 +130,9 @@ CREATE TABLE IF NOT EXISTS serie_temporal (
     fecha_hora_registro TIMESTAMP NOT NULL,
     alerta_alarma BOOLEAN NOT NULL,
     evento_sismico_id BIGINT,
-    sismografo_id BIGINT,
+    sismografo_identificador INTEGER,
     CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE,
-    CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_id) REFERENCES sismografo(id)
+    CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_identificador) REFERENCES sismografo(identificador_sismografo)
 );
 
 -- 12) MUESTRA_SISMICA
@@ -157,25 +147,24 @@ CREATE TABLE IF NOT EXISTS muestra_sismica (
 CREATE TABLE IF NOT EXISTS detalle_muestra_sismica (
     id BIGSERIAL PRIMARY KEY,
     valor VARCHAR(255) NOT NULL,
-    tipo_dato_id BIGINT,
+    tipo_dato_denominacion VARCHAR(100),
     muestra_sismica_id BIGINT,
-    CONSTRAINT fk_detalle_tipo_dato FOREIGN KEY (tipo_dato_id) REFERENCES tipo_de_dato(id),
+    CONSTRAINT fk_detalle_tipo_dato FOREIGN KEY (tipo_dato_denominacion) REFERENCES tipo_de_dato(denominacion),
     CONSTRAINT fk_detalle_muestra FOREIGN KEY (muestra_sismica_id) REFERENCES muestra_sismica(id) ON DELETE CASCADE
 );
 
 -- 14) USUARIO
 CREATE TABLE IF NOT EXISTS usuario (
-    id BIGSERIAL PRIMARY KEY,
-    nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(100) PRIMARY KEY,
     contrasena VARCHAR(255) NOT NULL,
-    empleado_id BIGINT,
-    CONSTRAINT fk_usuario_empleado FOREIGN KEY (empleado_id) REFERENCES empleado(id)
+    empleado_mail VARCHAR(150),
+    CONSTRAINT fk_usuario_empleado FOREIGN KEY (empleado_mail) REFERENCES empleado(mail)
 );
 
 -- 15) SESION
 CREATE TABLE IF NOT EXISTS sesion (
     id BIGSERIAL PRIMARY KEY,
     fecha_hora TIMESTAMP NOT NULL,
-    usuario_id BIGINT,
-    CONSTRAINT fk_sesion_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    usuario_nombre VARCHAR(100),
+    CONSTRAINT fk_sesion_usuario FOREIGN KEY (usuario_nombre) REFERENCES usuario(nombre_usuario)
 );

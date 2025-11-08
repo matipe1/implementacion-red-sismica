@@ -16,20 +16,17 @@ import java.util.List;
 public class Sismografo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "identificador_sismografo", nullable = false, unique = true)
+    private Integer identificadorSismografo;
 
     @Column(name = "nro_serie", nullable = false, unique = true)
     private Integer nroSerie;
-
-    @Column(name = "identificador_sismografo", nullable = false, unique = true)
-    private Integer identificadorSismografo;
 
     @Column(name = "fecha_adquisicion", nullable = false)
     private LocalDate fechaAdquisicion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estacion_sismologica_id", foreignKey = @ForeignKey(name = "fk_sismografo_estacion"))
+    @JoinColumn(name = "estacion_sismologica_codigo", foreignKey = @ForeignKey(name = "fk_sismografo_estacion"))
     private EstacionSismologica estacionSismologica;
 
     @OneToMany(mappedBy = "sismografo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

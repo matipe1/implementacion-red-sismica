@@ -13,9 +13,6 @@ import lombok.*;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "nombre_usuario", nullable = false, unique = true, length = 100)
     private String nombreUsuario;
 
@@ -23,7 +20,7 @@ public class Usuario {
     private String contraseña;
 
     @OneToOne
-    @JoinColumn(name = "empleado_id", foreignKey = @ForeignKey(name = "fk_usuario_empleado"))
+    @JoinColumn(name = "empleado_mail", foreignKey = @ForeignKey(name = "fk_usuario_empleado"))
     private Empleado empleado;
 
     public Empleado getASLogueado() {

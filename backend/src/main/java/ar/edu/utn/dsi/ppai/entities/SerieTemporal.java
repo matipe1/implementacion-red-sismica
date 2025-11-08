@@ -42,7 +42,7 @@ public class SerieTemporal {
     @JoinColumn(name = "evento_sismico_id", foreignKey = @ForeignKey(name = "fk_serie_evento"))
     private EventoSismico eventoSismico;
 
-    @ManyToOne(fetch = LAZY) @JoinColumn(name="sismografo_id")
+    @ManyToOne(fetch = LAZY) @JoinColumn(name="sismografo_identificador")
     private Sismografo sismografo;
 
     public Integer buscarCodigoEstacionDeSismografo(List<Sismografo> sismografos) {

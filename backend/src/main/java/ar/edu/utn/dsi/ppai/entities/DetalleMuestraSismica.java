@@ -22,7 +22,7 @@ public class DetalleMuestraSismica {
     private String valor;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "tipo_dato_id", foreignKey = @ForeignKey(name = "fk_detalle_tipo_dato"))
+    @JoinColumn(name = "tipo_dato_denominacion", foreignKey = @ForeignKey(name = "fk_detalle_tipo_dato"))
     private TipoDeDato tipoDeDato;
 
     @ManyToOne(fetch = LAZY) @JoinColumn(name="muestra_sismica_id")
