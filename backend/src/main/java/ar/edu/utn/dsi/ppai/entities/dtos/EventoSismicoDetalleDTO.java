@@ -14,8 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class EventoSismicoDetalleDTO {
-
-    private EventoSismicoDTO eventoSismico;
     private DatosSismicosDTO datosSismicos;
     private List<SerieTemporalDTO> seriesTemporales;
 
