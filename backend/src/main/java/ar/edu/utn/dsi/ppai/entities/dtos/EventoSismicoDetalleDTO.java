@@ -1,10 +1,6 @@
 package ar.edu.utn.dsi.ppai.entities.dtos;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

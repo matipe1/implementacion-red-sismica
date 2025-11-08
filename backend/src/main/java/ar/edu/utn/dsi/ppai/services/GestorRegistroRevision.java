@@ -24,8 +24,6 @@ import ar.edu.utn.dsi.ppai.entities.dtos.MuestraSismicaDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.SerieTemporalDTO;
 import ar.edu.utn.dsi.ppai.entities.dtos.TipoDeDatoDTO;
 import ar.edu.utn.dsi.ppai.entities.estados.AutoDetectado;
-import ar.edu.utn.dsi.ppai.entities.estados.Estado;
-import ar.edu.utn.dsi.ppai.repositories.EstadoRepository;
 import ar.edu.utn.dsi.ppai.repositories.EventoSismicoRepository;
 import ar.edu.utn.dsi.ppai.repositories.SesionRepository;
 import ar.edu.utn.dsi.ppai.repositories.SismografoRepository;
@@ -35,17 +33,14 @@ import jakarta.transaction.Transactional;
 @Service
 public class GestorRegistroRevision {
     private final EventoSismicoRepository eventoSismicoRepository;
-    private final EstadoRepository estadoRepository;
     private final SismografoRepository sismografoRepository;
     private final SesionRepository sesionRepository;
     private static final Long SESION_ACTIVA_ID = 1L;
 
     public GestorRegistroRevision(EventoSismicoRepository eventoSismicoRepository,
-                                   EstadoRepository estadoRepository,
                                    SismografoRepository sismografoRepository,
                                    SesionRepository sesionRepository) {
         this.eventoSismicoRepository = eventoSismicoRepository;
-        this.estadoRepository = estadoRepository;
         this.sismografoRepository = sismografoRepository;
         this.sesionRepository = sesionRepository;
     }
@@ -200,19 +195,6 @@ public class GestorRegistroRevision {
             )
             .toList();
     }
-
-
-
-    // Se deberian borrar cuando arreglemos el tema del patron state
-    // private Estado buscarEstadoBloqueadoEnRevision(EventoSismico evento) {
-    //     return estadoRepository.findByNombre("Bloqueado en revisión")
-    //                 .orElseThrow(() -> new EntityNotFoundException("El estado 'Bloqueado en revisión' no existe en la base de datos."));
-    // }
-
-    // private Estado buscarEstadoRechazado(EventoSismico evento) {
-    //     return estadoRepository.findByNombre("Rechazado")
-    //         .orElseThrow(() -> new EntityNotFoundException("El estado 'Rechazado' no existe en la base de datos."));
-    // }
 
     // Prueba (tambien se deberia borrar)
     private List<CambioEstadoDTO> cambiosEstadoPrueba(EventoSismico eventoSeleccionado) {
