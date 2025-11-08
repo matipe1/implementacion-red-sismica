@@ -48,7 +48,7 @@ public class EventoSismico {
 
     // Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clasificacion_sismo_id", foreignKey = @ForeignKey(name = "fk_evento_clasificacion"))
+    @JoinColumn(name = "clasificacion_sismo_nombre", foreignKey = @ForeignKey(name = "fk_evento_clasificacion"))
     private ClasificacionSismo clasificacionSismo;
 
     @ManyToOne(fetch = FetchType.LAZY)

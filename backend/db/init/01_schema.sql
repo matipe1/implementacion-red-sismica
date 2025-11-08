@@ -47,8 +47,7 @@ CREATE TABLE autodetectado (
 
 -- 3) CLASIFICACION_SISMO
 CREATE TABLE IF NOT EXISTS clasificacion_sismo (
-    id BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) PRIMARY KEY,
     km_profundidad_desde DOUBLE PRECISION NOT NULL,
     km_profundidad_hasta DOUBLE PRECISION NOT NULL
 );
@@ -107,11 +106,11 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     valor_magnitud NUMERIC(4, 2) NOT NULL,
     analista_supervisor_mail VARCHAR(150),
     estado_actual_id BIGINT,
-    clasificacion_sismo_id BIGINT,
+    clasificacion_sismo_nombre VARCHAR(100),
     origen_generacion_id BIGINT,
     alcance_sismo_id BIGINT,
     CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_mail) REFERENCES empleado(mail),
-    CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_id) REFERENCES clasificacion_sismo(id),
+    CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_nombre) REFERENCES clasificacion_sismo(nombre),
     CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_id) REFERENCES origen_de_generacion(id),
     CONSTRAINT fk_evento_alcance FOREIGN KEY (alcance_sismo_id) REFERENCES alcance_sismo(id)
 );

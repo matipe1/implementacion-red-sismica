@@ -71,14 +71,14 @@ INSERT INTO evento_sismico (
     fecha_hora_ocurrencia, fecha_hora_fin,
     latitud_epicentro, longitud_epicentro, latitud_hipocentro, longitud_hipocentro,
     valor_magnitud, analista_supervisor_mail, estado_actual_id,
-    clasificacion_sismo_id, origen_generacion_id, alcance_sismo_id
+    clasificacion_sismo_nombre, origen_generacion_id, alcance_sismo_id
 ) VALUES
 -- E1, E2, E3 en autodetectado con un solo cambio de estado
-('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 1, 1, 1),
-('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 2, 1, 1, 1),
-('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, NULL, 3, 1, 1, 1),
+('2024-04-05 12:30:00', '2024-04-05 12:45:00', -26.8, -65.2, -27.1, -65.5, 3.6, NULL, 1, 'Superficial', 1, 1),
+('2024-04-07 09:45:00', '2024-04-07 10:00:00', -30.2, -64.9, -30.5, -65.0, 2.2, NULL, 2, 'Superficial', 1, 1),
+('2024-04-10 15:10:00', '2024-04-10 15:30:00', -29.3, -66.1, -29.6, -66.4, 2.1, NULL, 3, 'Superficial', 1, 1),
 -- E4 en bloqueado en revision con dos cambios de estado
-('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 'luispaz@gmail.com', 5, 1, 1, 1);
+('2024-04-14 07:20:00', '2024-04-14 07:40:00', -32.7, -62.3, -33.0, -62.6, 2.0, 'luispaz@gmail.com', 5, 'Superficial', 1, 1);
 
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
