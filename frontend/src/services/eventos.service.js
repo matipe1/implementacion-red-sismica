@@ -1,21 +1,3 @@
-// src/services/eventos.service.js
-import http from "./http.service";
-
-export async function getEventosPendientes() {
-  const res = await http.get("/eventos?estado=pendiente");
-  return res.data;
-}
-
-export async function getEventoById(id) {
-  const res = await http.get(`/eventos/${id}`);
-  return res.data;
-}
-
-export async function actualizarEvento(id, data) {
-  const res = await http.put(`/eventos/${id}`, data);
-  return res.data;
-}
-// src/services/eventos.service.js
 import http from "./http.service";
 
 /**
@@ -29,19 +11,60 @@ export async function getEventosPendientes() {
 
 /**
  * 2️⃣ Enviar el evento seleccionado al backend para obtener su detalle
- *    (series temporales, datos sísmicos, etc.)
  * POST /api/revisiones/eventos/seleccionar
  */
 export async function seleccionarEvento(evento) {
-  const res = await http.post("/revisiones/eventos/seleccionar", evento);
+  // 🧩 Convertimos el formato al que espera el backend
+  const body = {
+    fechaHoraOcurrencia: formatearFecha(evento.fechaHoraOcurrencia),
+    latitudEpicentro: parseFloat(evento.latitudEpicentro),
+    longitudEpicentro: parseFloat(evento.longitudEpicentro),
+    latitudHipocentro: parseFloat(evento.latitudHipocentro),
+    longitudHipocentro: parseFloat(evento.longitudHipocentro),
+    valorMagnitud: parseFloat(evento.valorMagnitud),
+  };
+
+  console.log("🛰 Enviando evento al backend:", body);
+
+  const res = await http.post("/revisiones/eventos/seleccionar", body);
   return res.data;
 }
 
 /**
- * 3️⃣ Rechazar un evento sísmico (actualiza estado, registra fecha y responsable)
+ * 3️⃣ Rechazar un evento sísmico
  * POST /api/revisiones/eventos/rechazar
  */
 export async function rechazarEvento(evento) {
-  const res = await http.post("/revisiones/eventos/rechazar", evento);
+  const body = {
+    fechaHoraOcurrencia: formatearFecha(evento.fechaHoraOcurrencia),
+    latitudEpicentro: parseFloat(evento.latitudEpicentro),
+    longitudEpicentro: parseFloat(evento.longitudEpicentro),
+    latitudHipocentro: parseFloat(evento.latitudHipocentro),
+    longitudHipocentro: parseFloat(evento.longitudHipocentro),
+    valorMagnitud: parseFloat(evento.valorMagnitud),
+  };
+
+  console.log("❌ Rechazando evento:", body);
+
+  const res = await http.post("/revisiones/eventos/rechazar", body);
   return res.data;
+}
+
+/**
+ * 🔧 Función auxiliar: formatear fecha tipo '2024-04-05 12:30:00'
+ */
+function formatearFecha(fecha) {
+  if (!fecha) return null;
+  try {
+    const d = new Date(fecha);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mi = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  } catch {
+    return fecha;
+  }
 }

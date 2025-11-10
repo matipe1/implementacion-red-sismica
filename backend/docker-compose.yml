@@ -12,6 +12,16 @@ services:
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d        # ejecuta todos los .sql de /db/init
       - pgdata:/var/lib/postgresql/data              # volumen de datos (persistente)
+
+    command: >
+      bash -c "
+        docker-entrypoint.sh postgres &
+        sleep 5 &&
+        psql -U postgres -d red_sismica -f /docker-entrypoint-initdb.d/01_schema.sql &&
+        psql -U postgres -d red_sismica -f /docker-entrypoint-initdb.d/02_data.sql &&
+        wait
+      "
+    
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d red_sismica"]
       interval: 5s

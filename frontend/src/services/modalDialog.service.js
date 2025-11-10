@@ -1,94 +1,54 @@
-import React, { useState, useEffect } from "react";
-import modalDialogService from "../services/modalDialog.service";
+// src/services/modalDialog.service.js
+let ModalDialog_Show = null;   // la función show del componente ModalDialog
+let cntBloquearPantalla = 0;   // contador reentrante para el loader
 
-export default function ModalDialog() {
-  const [visible, setVisible] = useState(false);
-  const [mensaje, setMensaje] = useState("");
-  const [titulo, setTitulo] = useState("");
-  const [boton1, setBoton1] = useState("");
-  const [boton2, setBoton2] = useState("");
-  const [accionBoton1, setAccionBoton1] = useState(null);
-  const [accionBoton2, setAccionBoton2] = useState(null);
-  const [tipo, setTipo] = useState("info");
+export const subscribeShow = (fnShow) => {
+  ModalDialog_Show = fnShow;
+};
 
-  // Se suscribe al servicio al montar el componente
-  useEffect(() => {
-    modalDialogService.subscribeShow(show);
-  }, []);
+export const Alert = (
+  mensaje,
+  titulo = "Atención",
+  boton1 = "Aceptar",
+  boton2 = "",
+  accionBoton1 = null,
+  accionBoton2 = null,
+  tipo = "info"
+) => {
+  if (!ModalDialog_Show) return;
+  ModalDialog_Show(mensaje, titulo, boton1, boton2, accionBoton1, accionBoton2, tipo);
+};
 
-  // Función principal invocada desde el servicio
-  const show = (
-    _mensaje = "",
-    _titulo = "",
-    _boton1 = "",
-    _boton2 = "",
-    _accionBoton1 = null,
-    _accionBoton2 = null,
-    _tipo = "info"
-  ) => {
-    if (!_mensaje) {
-      setVisible(false);
-      return;
-    }
+export const Confirm = (
+  mensaje,
+  titulo = "Confirmar",
+  boton1 = "Aceptar",
+  boton2 = "Cancelar",
+  accionBoton1 = null,
+  accionBoton2 = null,
+  tipo = "warning"
+) => {
+  if (!ModalDialog_Show) return;
+  ModalDialog_Show(mensaje, titulo, boton1, boton2, accionBoton1, accionBoton2, tipo);
+};
 
-    setMensaje(_mensaje);
-    setTitulo(_titulo);
-    setBoton1(_boton1);
-    setBoton2(_boton2);
-    setAccionBoton1(() => _accionBoton1);
-    setAccionBoton2(() => _accionBoton2);
-    setTipo(_tipo);
-    setVisible(true);
-  };
+/**
+ * Muestra/oculta overlay de bloqueo. Tu http.service ya la usa.
+ * Cuando se bloquea, el componente mostrará un spinner sin botones.
+ */
+export const BloquearPantalla = (bloquear) => {
+  if (bloquear) cntBloquearPantalla++;
+  else cntBloquearPantalla = Math.max(0, cntBloquearPantalla - 1);
 
-  // Colores según tipo
-  const getColor = () => {
-    switch (tipo) {
-      case "warning":
-        return "border-yellow-400 text-yellow-700";
-      case "error":
-        return "border-red-400 text-red-700";
-      case "success":
-        return "border-green-400 text-green-700";
-      default:
-        return "border-blue-400 text-blue-700";
-    }
-  };
+  if (!ModalDialog_Show) return;
 
-  // Render
-  if (!visible) return null;
+  if (bloquear && cntBloquearPantalla === 1) {
+    ModalDialog_Show("BloquearPantalla", "Espere por favor...", "", "", null, null, "info");
+  }
+  if (!bloquear && cntBloquearPantalla === 0) {
+    ModalDialog_Show("", "", "", "", null, null); // cierra
+  }
+};
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className={`bg-white rounded-xl shadow-lg p-6 w-96 border-l-4 ${getColor()}`}>
-        <h2 className="text-xl font-semibold mb-2">{titulo}</h2>
-        <p className="text-gray-700 mb-4">{mensaje}</p>
-
-        <div className="flex justify-end gap-3">
-          {boton2 && (
-            <button
-              onClick={() => {
-                setVisible(false);
-                if (accionBoton2) accionBoton2();
-              }}
-              className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-            >
-              {boton2}
-            </button>
-          )}
-          {boton1 && (
-            <button
-              onClick={() => {
-                setVisible(false);
-                if (accionBoton1) accionBoton1();
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              {boton1}
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+const modalDialogService = { subscribeShow, Alert, Confirm, BloquearPantalla };
+export default modalDialogService;

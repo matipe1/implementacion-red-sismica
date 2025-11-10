@@ -1,38 +1,24 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
 import Inicio from "./components/Inicio";
-import Productos from "./components/Productos";
-import PedidoCarrito from "./components/PedidoCarrito";
-import CrearPedido from "./components/CrearPedido";
-import Pedidos from "./components/Pedidos";
-import Clientes from "./components/Clientes";
-import PedidoDetalle from "./components/PedidoDetalle";
-import ModalDialog from "./components/ModalDialog"; // 👈 importante
+import EventoList from "./components/EventoList";
+import ModalDialog from "./components/ModalDialog"; // opcional, si lo usás global
 import "./App.css";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        {/* Header global */}
-        <Header />
+      {/* Modal global (si lo usás en otras partes del sistema) */}
+      <ModalDialog />
 
-        {/* Contenido principal */}
-        <main className="flex-grow p-5">
-          <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/productos" element={<Productos />} />
-            <Route path="/carrito" element={<PedidoCarrito />} />
-            <Route path="/crear-pedido" element={<CrearPedido />} />
-            <Route path="/pedidos" element={<Pedidos />} />
-            <Route path="/clientes" element={<Clientes />} />
-            <Route path="/pedidos/:id" element={<PedidoDetalle />} />
-          </Routes>
-        </main>
+      <main className="app-main">
+        <Routes>
+          {/* 🏠 Pantalla inicial */}
+          <Route path="/" element={<Inicio />} />
 
-        {/* Modal global (alertas, confirmaciones, bloqueos) */}
-        <ModalDialog />
-      </div>
+          {/* 📋 Pantalla de eventos autodetectados */}
+          <Route path="/revisiones" element={<EventoList />} />
+        </Routes>
+      </main>
     </BrowserRouter>
   );
 }

@@ -2,7 +2,7 @@ import axios from "axios";
 import modalService from "./modalDialog.service";
 
 const http = axios.create({
-  baseURL: "http://localhost:3000/api", // 👈 Incluye /api (coherente con backend)
+  baseURL: "http://localhost:8080/api", 
   headers: {
     "Content-Type": "application/json",
   },
@@ -48,4 +48,3 @@ http.interceptors.response.use(
 );
 
 export default http;
-    
