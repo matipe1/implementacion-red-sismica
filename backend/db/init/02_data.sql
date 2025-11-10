@@ -200,20 +200,19 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_denominacion, muestra_sism
 -- =========================================================
 -- 11) REINICIO DE SECUENCIAS
 -- =========================================================
-SELECT setval('estado_seq', (SELECT MAX(id) FROM (
-  SELECT MAX(id) FROM autodetectado
-  UNION ALL
-  SELECT MAX(id) FROM bloqueado_en_revision
-  UNION ALL
-  SELECT MAX(id) FROM pendiente
-  UNION ALL
-  SELECT MAX(id) FROM pendiente_revision
-  UNION ALL
-  SELECT MAX(id) FROM rechazado
-  UNION ALL
-  SELECT MAX(id) FROM autoconfirmado
-) t));
-SELECT setval('estado_seq', (SELECT MAX(id) FROM autodetectado));
+-- SELECT setval('estado_seq', (SELECT MAX(id) FROM (
+--   SELECT MAX(id) FROM autodetectado
+--   UNION ALL
+--   SELECT MAX(id) FROM bloqueado_en_revision
+--   UNION ALL
+--   SELECT MAX(id) FROM pendiente
+--   UNION ALL
+--   SELECT MAX(id) FROM pendiente_revision
+--   UNION ALL
+--   SELECT MAX(id) FROM rechazado
+--   UNION ALL
+--   SELECT MAX(id) FROM autoconfirmado
+-- ) t));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
 SELECT setval('evento_sismico_id_seq', (SELECT MAX(id) FROM evento_sismico));
 SELECT setval('cambio_estado_id_seq', (SELECT MAX(id) FROM cambio_estado));
