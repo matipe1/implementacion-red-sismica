@@ -26,11 +26,12 @@ import ar.edu.utn.dsi.ppai.entities.estados.AutoDetectado;
 import ar.edu.utn.dsi.ppai.repositories.EventoSismicoRepository;
 import ar.edu.utn.dsi.ppai.repositories.SesionRepository;
 import ar.edu.utn.dsi.ppai.repositories.SismografoRepository;
+import ar.edu.utn.dsi.ppai.services.interfaces.IGestorRegistroRevision;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class GestorRegistroRevision {
+public class GestorRegistroRevision implements IGestorRegistroRevision {
     private final EventoSismicoRepository eventoSismicoRepository;
     private final SismografoRepository sismografoRepository;
     private final SesionRepository sesionRepository;
