@@ -20,22 +20,15 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class EventoSismico {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    
+    @EmbeddedId
+    private EventoSismicoId id; // Latitud y Longitud del epicentro
 
     @Column(name = "fecha_hora_ocurrencia", nullable = false)
     private LocalDateTime fechaHoraOcurrencia;
 
     @Column(name = "fecha_hora_fin")
     private LocalDateTime fechaHoraFin;
-
-    @Column(name = "latitud_epicentro", nullable = false, precision = 9, scale = 6)
-    private BigDecimal latitudEpicentro;
-
-    @Column(name = "longitud_epicentro", nullable = false, precision = 9, scale = 6)
-    private BigDecimal longitudEpicentro;
 
     @Column(name = "latitud_hipocentro", precision = 9, scale = 6)
     private BigDecimal latitudHipocentro;
@@ -72,6 +65,15 @@ public class EventoSismico {
 
     @OneToMany(mappedBy = "eventoSismico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SerieTemporal> seriesTemporales = new ArrayList<>();
+
+    // Getters personalizados para el EmbeddedId
+    public BigDecimal getLatitudEpicentro() {
+        return id.getLatitudEpicentro();
+    }
+
+    public BigDecimal getLongitudEpicentro() {
+        return id.getLongitudEpicentro();
+    }
 
     public String getFechaHoraOcurrenciaFormateada() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

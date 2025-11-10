@@ -1,6 +1,8 @@
 package ar.edu.utn.dsi.ppai.repositories;
 
 import ar.edu.utn.dsi.ppai.entities.EventoSismico;
+import ar.edu.utn.dsi.ppai.entities.EventoSismicoId;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,14 +14,14 @@ import java.util.Optional;
 
 import ar.edu.utn.dsi.ppai.entities.estados.Estado;
 
-public interface EventoSismicoRepository extends JpaRepository<EventoSismico, Long> {
+public interface EventoSismicoRepository extends JpaRepository<EventoSismico, EventoSismicoId> {
     List<EventoSismico> findByEstadoActual(Estado estadoActual);
 
     @Query("""
       SELECT e FROM EventoSismico e
       WHERE e.fechaHoraOcurrencia = :fechaHoraOcurrencia
-        AND e.latitudEpicentro = :latEpi
-        AND e.longitudEpicentro = :lonEpi
+        AND e.id.latitudEpicentro = :latEpi
+        AND e.id.longitudEpicentro = :lonEpi
         AND e.latitudHipocentro = :latHip
         AND e.longitudHipocentro = :lonHip
         AND e.valorMagnitud = :valor

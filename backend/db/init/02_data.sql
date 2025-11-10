@@ -84,31 +84,31 @@ INSERT INTO evento_sismico (
 -- =========================================================
 -- 8) CAMBIOS DE ESTADO
 -- =========================================================
-INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_mail, estado_id, evento_sismico_id) VALUES
+INSERT INTO cambio_estado (fecha_hora_desde, fecha_hora_hasta, responsable_inspeccion_mail, estado_id, latitud_epicentro, longitud_epicentro) VALUES
 -- E1, E2 y E3 en autodetectado con un solo cambio
-('2024-04-05 12:30:00', NULL, NULL, 1, 1),
-('2024-04-07 09:45:00', NULL, NULL, 2, 2),
-('2024-04-10 15:10:00', NULL, NULL, 3, 3),
+('2024-04-05 12:30:00', NULL, NULL, 1, -26.8, -65.2),
+('2024-04-07 09:45:00', NULL, NULL, 2, -30.2, -64.9),
+('2024-04-10 15:10:00', NULL, NULL, 3, -29.3, -66.1),
 -- E4 en bloqueado en revision con dos cambios (autodetectado → bloqueado en revisión)
-('2024-04-14 07:20:00', '2024-04-14 08:00:00', NULL, 4, 4),
-('2024-04-14 08:00:00', NULL, NULL, 5, 4);
+('2024-04-14 07:20:00', '2024-04-14 08:00:00', NULL, 4, -32.7, -62.3),
+('2024-04-14 08:00:00', NULL, NULL, 5, -32.7, -62.3);
 
 -- =========================================================
 -- 9) SERIES TEMPORALES, MUESTRAS
 -- =========================================================
-INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, evento_sismico_id, sismografo_identificador) VALUES
+INSERT INTO serie_temporal (fecha_hora_inicio_registro, frecuencia_muestreo, fecha_hora_registro, alerta_alarma, latitud_epicentro, longitud_epicentro, sismografo_identificador) VALUES
 -- Evento 1
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 1, 501),
-('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, 1, 502),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, -26.8, -65.2, 501),
+('2025-02-21 19:05:41', 100.00, '2025-02-21 19:05:41', false, -26.8, -65.2, 502),
 -- Evento 2
-('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, 2, 501),
-('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, 2, 502),
+('2025-02-22 10:00:00', 50.00, '2025-02-22 10:00:00', false, -30.2, -64.9, 501),
+('2025-02-22 10:00:00', 100.00, '2025-02-22 10:00:00', false, -30.2, -64.9, 502),
 -- Evento 3
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 3, 501),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 3, 502),
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, -29.3, -66.1, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, -29.3, -66.1, 502),
 -- Evento 4
-('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, 4, 501),
-('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, 4, 502);
+('2025-02-21 19:05:41', 50.00, '2025-02-21 19:05:41', false, -32.7, -62.3, 501),
+('2025-03-05 14:30:00', 100.00, '2025-03-05 14:30:00', false, -32.7, -62.3, 502);
 
 
 INSERT INTO muestra_sismica (fecha_hora_muestra, serie_temporal_id) VALUES
@@ -214,7 +214,6 @@ INSERT INTO detalle_muestra_sismica (valor, tipo_dato_denominacion, muestra_sism
 --   SELECT MAX(id) FROM autoconfirmado
 -- ) t));
 SELECT setval('sesion_id_seq', (SELECT MAX(id) FROM sesion));
-SELECT setval('evento_sismico_id_seq', (SELECT MAX(id) FROM evento_sismico));
 SELECT setval('cambio_estado_id_seq', (SELECT MAX(id) FROM cambio_estado));
 SELECT setval('serie_temporal_id_seq', (SELECT MAX(id) FROM serie_temporal));
 SELECT setval('muestra_sismica_id_seq', (SELECT MAX(id) FROM muestra_sismica));
