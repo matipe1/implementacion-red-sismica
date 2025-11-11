@@ -1,16 +1,270 @@
-.tableCss {
+/* =====================================================
+   🌍 ESTILOS GENERALES (de tu amiga)
+===================================================== */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #edf2f7, #e2e8f0);
+  margin: 0;
+  padding: 0;
+  color: #1f2937;
+}
+
+main {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* =====================================================
+   🧭 TÍTULOS (de tu amiga)
+===================================================== */
+h1.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 40px;
+}
+
+.titulo-datos-sismicos {
+  text-align: center;
+  color: #1e3a8a; /* mismo color que los h2 para mantener consistencia */
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+/* =====================================================
+   📊 ESTILOS PARA TU TABLA (Agregado)
+===================================================== */
+.tabla-eventos {
   width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  vertical-align: top;
+  max-width: 1000px; /* Ancho máximo para legibilidad */
+  margin: 20px auto; /* Centrar la tabla */
   border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Para que el radius funcione en las esquinas */
 }
-.tableCss th,
-.tableCss td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #dee2e6;
+
+.tabla-eventos th,
+.tabla-eventos td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
-.table th {
+
+.tabla-eventos th {
+  background-color: #f8fafc;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.tabla-eventos tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-eventos tr:hover {
+  background-color: #f1f5f9;
+}
+
+.tabla-eventos .radio-select {
+  width: 20px;
+  height: 20px;
+  accent-color: #2563eb;
+}
+
+/* =====================================================
+   🪄 BOTONES (de tu amiga)
+===================================================== */
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none; 
+  text-align: center;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+  transform: scale(1.03);
+}
+
+.btn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Colores de Botón */
+.btn-primario {
+  background-color: #2563eb; /* Azul (de tu amiga) */
+  color: #fff;
+}
+.btn-primario:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.btn-cancelar {
+  background-color: #dc2626; /* Rojo (de tu amiga) */
+  color: #fff;
+}
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+/* --- NUEVOS ESTILOS DE BOTÓN --- */
+.btn-success {
+  background-color: #16a34a; /* Verde */
+  color: #fff;
+}
+.btn-success:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.btn-warning {
+  background-color: #f59e0b; /* Ámbar/Amarillo */
+  color: #fff;
+}
+.btn-warning:hover:not(:disabled) {
+  background-color: #d97706;
+}
+
+.btn-secondary {
+  background-color: #739cec; /* Gris */
+  color: #fff;
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+/* =====================================================
+   🧭 DETALLES DE EVENTO (de tu amiga)
+   (Lo usaremos en tu página EventoDetalle.tsx)
+===================================================== */
+.detalle-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  color: #1e293b;
+}
+
+.detalle-container h2 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+.bloque-info {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-left: 4px solid #2563eb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.bloque-info p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.bloque-info strong {
+  color: #334155;
+  margin-right: 8px;
+}
+
+.bloque-ubicacion {
   background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px 15px;
+}
+
+/* =====================================================
+   ⚙️ ACCIONES (de tu amiga)
+===================================================== */
+.acciones-finales {
+  display: flex;
+  justify-content: center; /* Alinear al centro */
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.acciones-secundarias {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* =====================================================
+   🌋 PANTALLA DE INICIO (de tu amiga)
+===================================================== */
+.inicio-container {
+  background: linear-gradient(135deg, #788199, #a3a8c2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.inicio-icono {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: vibrar 1s infinite ease-in-out;
+}
+
+@keyframes vibrar {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+}
+
+.inicio-title {
+  font-size: 28px;
   font-weight: bold;
+  margin-bottom: 25px;
+  color: #fff; /* Asegurar color blanco */
+}
+
+.inicio-btn {
+  background-color: #285a9a;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.inicio-btn:hover {
+  background-color: #1e429f;
+  transform: scale(1.05);
+}
+
+/* =====================================================
+   ✨ EFECTO DE ENTRADA
+===================================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -38,8 +38,11 @@ public class SerieTemporal {
     @OneToMany(mappedBy = "serieTemporal", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)
     private List<MuestraSismica> muestrasSismicas = new ArrayList<>();
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "evento_sismico_id", foreignKey = @ForeignKey(name = "fk_serie_evento"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "latitud_epicentro", referencedColumnName = "latitud_epicentro"),
+        @JoinColumn(name = "longitud_epicentro", referencedColumnName = "longitud_epicentro")
+    })
     private EventoSismico eventoSismico;
 
     @ManyToOne(fetch = LAZY) @JoinColumn(name="sismografo_identificador")
