@@ -91,11 +91,10 @@ CREATE TABLE IF NOT EXISTS sismografo (
 
 -- 9) EVENTO_SISMICO
 CREATE TABLE IF NOT EXISTS evento_sismico (
-    id BIGSERIAL PRIMARY KEY,
-    fecha_hora_ocurrencia TIMESTAMP NOT NULL,
-    fecha_hora_fin TIMESTAMP,
     latitud_epicentro NUMERIC(9, 6) NOT NULL,
     longitud_epicentro NUMERIC(9, 6) NOT NULL,
+    fecha_hora_ocurrencia TIMESTAMP NOT NULL,
+    fecha_hora_fin TIMESTAMP,
     latitud_hipocentro NUMERIC(9, 6) NOT NULL,
     longitud_hipocentro NUMERIC(9, 6) NOT NULL,
     valor_magnitud NUMERIC(4, 2) NOT NULL,
@@ -104,6 +103,7 @@ CREATE TABLE IF NOT EXISTS evento_sismico (
     clasificacion_sismo_nombre VARCHAR(100),
     origen_generacion_nombre VARCHAR(100),
     alcance_sismo_nombre VARCHAR(100),
+    CONSTRAINT pk_evento_sismico PRIMARY KEY (latitud_epicentro, longitud_epicentro),
     CONSTRAINT fk_evento_empleado FOREIGN KEY (analista_supervisor_mail) REFERENCES empleado(mail),
     CONSTRAINT fk_evento_clasificacion FOREIGN KEY (clasificacion_sismo_nombre) REFERENCES clasificacion_sismo(nombre),
     CONSTRAINT fk_evento_origen FOREIGN KEY (origen_generacion_nombre) REFERENCES origen_de_generacion(nombre),
@@ -117,9 +117,12 @@ CREATE TABLE IF NOT EXISTS cambio_estado (
     fecha_hora_hasta TIMESTAMP,
     responsable_inspeccion_mail VARCHAR(150),
     estado_id BIGINT,
-    evento_sismico_id BIGINT,
-    CONSTRAINT fk_cambio_estado_empleado FOREIGN KEY (responsable_inspeccion_mail) REFERENCES empleado(mail),
-    CONSTRAINT fk_cambio_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE
+    latitud_epicentro NUMERIC(9,6) NOT NULL,
+    longitud_epicentro NUMERIC(9,6) NOT NULL,
+    CONSTRAINT fk_cambio_evento FOREIGN KEY (latitud_epicentro, longitud_epicentro)
+        REFERENCES evento_sismico(latitud_epicentro, longitud_epicentro)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_cambio_estado_empleado FOREIGN KEY (responsable_inspeccion_mail) REFERENCES empleado(mail)
 );
 
 -- 11) SERIE_TEMPORAL
@@ -129,9 +132,12 @@ CREATE TABLE IF NOT EXISTS serie_temporal (
     frecuencia_muestreo NUMERIC(6, 2) NOT NULL,
     fecha_hora_registro TIMESTAMP NOT NULL,
     alerta_alarma BOOLEAN NOT NULL,
-    evento_sismico_id BIGINT,
     sismografo_identificador INTEGER,
-    CONSTRAINT fk_serie_evento FOREIGN KEY (evento_sismico_id) REFERENCES evento_sismico(id) ON DELETE CASCADE,
+    latitud_epicentro NUMERIC(9,6) NOT NULL,
+    longitud_epicentro NUMERIC(9,6) NOT NULL,
+    CONSTRAINT fk_cambio_evento FOREIGN KEY (latitud_epicentro, longitud_epicentro)
+        REFERENCES evento_sismico(latitud_epicentro, longitud_epicentro)
+        ON DELETE CASCADE,
     CONSTRAINT fk_serie_sismografo FOREIGN KEY (sismografo_identificador) REFERENCES sismografo(identificador_sismografo)
 );
 

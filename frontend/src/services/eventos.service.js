@@ -14,19 +14,11 @@ export async function getEventosPendientes() {
  * POST /api/revisiones/eventos/seleccionar
  */
 export async function seleccionarEvento(evento) {
-  // 🧩 Convertimos el formato al que espera el backend
-  const body = {
-    fechaHoraOcurrencia: formatearFecha(evento.fechaHoraOcurrencia),
-    latitudEpicentro: parseFloat(evento.latitudEpicentro),
-    longitudEpicentro: parseFloat(evento.longitudEpicentro),
-    latitudHipocentro: parseFloat(evento.latitudHipocentro),
-    longitudHipocentro: parseFloat(evento.longitudHipocentro),
-    valorMagnitud: parseFloat(evento.valorMagnitud),
-  };
-
+  const body = normalizarEventoParaBack(evento);
   console.log("🛰 Enviando evento al backend:", body);
-
-  const res = await http.post("/revisiones/eventos/seleccionar", body);
+  const res = await http.post("/revisiones/eventos/seleccionar", body, {
+    headers: { "Content-Type": "application/json" },
+  });
   return res.data;
 }
 
@@ -35,24 +27,28 @@ export async function seleccionarEvento(evento) {
  * POST /api/revisiones/eventos/rechazar
  */
 export async function rechazarEvento(evento) {
-  const body = {
-    fechaHoraOcurrencia: formatearFecha(evento.fechaHoraOcurrencia),
-    latitudEpicentro: parseFloat(evento.latitudEpicentro),
-    longitudEpicentro: parseFloat(evento.longitudEpicentro),
-    latitudHipocentro: parseFloat(evento.latitudHipocentro),
-    longitudHipocentro: parseFloat(evento.longitudHipocentro),
-    valorMagnitud: parseFloat(evento.valorMagnitud),
-  };
-
+  const body = normalizarEventoParaBack(evento);
   console.log("❌ Rechazando evento:", body);
-
-  const res = await http.post("/revisiones/eventos/rechazar", body);
+  const res = await http.post("/revisiones/eventos/rechazar", body, {
+    headers: { "Content-Type": "application/json" },
+  });
   return res.data;
 }
 
-/**
- * 🔧 Función auxiliar: formatear fecha tipo '2024-04-05 12:30:00'
- */
+/* ---------- helpers ---------- */
+
+function normalizarEventoParaBack(e) {
+  return {
+    fechaHoraOcurrencia: formatearFecha(e.fechaHoraOcurrencia),
+    latitudEpicentro: parseFloat(e.latitudEpicentro),
+    longitudEpicentro: parseFloat(e.longitudEpicentro),
+    latitudHipocentro: parseFloat(e.latitudHipocentro),
+    longitudHipocentro: parseFloat(e.longitudHipocentro),
+    valorMagnitud: parseFloat(e.valorMagnitud),
+  };
+}
+
+/** 🔧 '2024-04-05 12:30:00' */
 function formatearFecha(fecha) {
   if (!fecha) return null;
   try {

@@ -34,7 +34,11 @@ public class CambioEstado {
     @JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cambio_estado_estado"))
     private Estado estado;
 
-    @ManyToOne(fetch = LAZY) @JoinColumn(name="evento_sismico_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "latitud_epicentro", referencedColumnName = "latitud_epicentro"),
+        @JoinColumn(name = "longitud_epicentro", referencedColumnName = "longitud_epicentro")
+})
     private EventoSismico eventoSismico;
 
     public Boolean sosCEActual() {
