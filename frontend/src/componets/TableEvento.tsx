@@ -1,59 +1,83 @@
 import type {Evento} from '../types/types';
-import type { NavigateFunction } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 type TableEventoProps = {
-    eventos: Evento[] ,
-    setSelectedEvento: (value: Evento | null) => void,
-    selectedEvento: Evento | null, 
-    navigate: NavigateFunction
+  eventos: Evento[];
+  eventoSeleccionado: Evento | null;
+  setEventoSeleccionado: (evento: Evento) => void;
+  onConfirmarSeleccion: () => void;
+  isLoading: boolean;
 };
 
-function TableEvento({eventos, setSelectedEvento, selectedEvento, navigate}: TableEventoProps) {
+export default function TableEvento({eventos, setEventoSeleccionado, eventoSeleccionado, onConfirmarSeleccion, isLoading}: TableEventoProps) {
+  const navigate = useNavigate();
 
-    const handleSelect = (evento: Evento) => {
-        setSelectedEvento(evento);
-    }
-    
-    return (
-        <div className="container">
-            <h4 className='fw-light mb-3 fs-1'>Selecciona un evento: </h4>
-            <table className="tableCss">
-                <thead>
-                    <tr>
-                        <th>Fecha y Hora de Ocurrencia</th>
-                        <th>Ubicacion</th>
-                        <th>Magnitud</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {eventos.map((evento,index) => (
-                        <tr key={index}
-                            onClick={() => handleSelect(evento)}
-                            style={{ cursor: "pointer", backgroundColor: (selectedEvento === evento ? "#1ba1b8ff" : "transparent") }}
-                        >
-                            <td>{evento.fechaHoraOcurrencia}</td>
-                            <td>Epicentro: Latitud: {evento.latitudEpicentro} Longitud: {evento.longitudEpicentro} 
-                                - Hipocentro: Latitud: {evento.latitudHipocentro} Longitud: {evento.longitudHipocentro}</td>
-                            <td>{evento.valorMagnitud}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        <div className='mt-5'>
-            <button className='border-o btn btn-secondary '  
-                    onClick={() => navigate("/")}
-            >Cancelar</button>
-            <button className='border-o btn btn-secondary ms-2'
-                    onClick={() => {
-                        if(selectedEvento ) {
-                        navigate("/evento/seleccionado")
-                    } 
-                    }  }
-            >Seleccionar</button>
-        </div>
+  return (
+    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <table className="tabla-eventos">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Fecha y Hora</th>
+            <th>Ubicación</th>
+            <th>Magnitud</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.isArray(eventos) && eventos.length > 0 ? (
+            eventos.map((evento) => {
+            const isSelected = eventoSeleccionado === evento;
 
-        </div>
-    )
+            return (
+              <tr
+              key={evento.latitudEpicentro + evento.longitudEpicentro}
+              className={isSelected ? 'evento-seleccionado' : ''}
+              onClick={() => setEventoSeleccionado(evento)}
+              style={{ cursor: "pointer" }}
+            >
+              <td>
+                <input 
+                  type="radio"
+                  name="evento-seleccionado"
+                  className="radio-select"
+                  checked={isSelected}
+                  onChange={() => setEventoSeleccionado(evento)}
+                />
+              </td>
+              <td>{evento.fechaHoraOcurrencia}</td>
+              <td>
+                Epicentro ({evento.latitudEpicentro}, {evento.longitudEpicentro}) - 
+                Hipocentro ({evento.latitudHipocentro}, {evento.longitudHipocentro})
+              </td>
+              <td>{evento.valorMagnitud}</td>
+            </tr>
+            )
+          })
+          ) : (
+            <tr>
+              <td colSpan={5} style={{ textAlign: 'center', color: '#6b7280' }}>
+                No hay eventos autodetectados disponibles.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      
+      <div style={{ textAlign: 'right', marginTop: '20px' }}>
+        <button
+          className="btn btn-primario btn-primario:hover" // Aplicamos clase de botón
+          onClick={onConfirmarSeleccion}
+          disabled={!eventoSeleccionado || isLoading}
+        >
+          {isLoading ? "Cargando..." : "Confirmar Selección"}
+        </button>
+        <button
+          className="btn btn-cancelar btn-cancelar:hover ms-2"
+          onClick={() => navigate("/")}
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  );
 }
-
-export default TableEvento;
