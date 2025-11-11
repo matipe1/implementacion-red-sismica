@@ -45,6 +45,26 @@ CREATE TABLE autodetectado (
   nombre VARCHAR(60) NOT NULL
 );
 
+CREATE TABLE cerrado (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE confirmado (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE derivado_a_supervisor (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE sin_revision (
+  id BIGINT PRIMARY KEY DEFAULT nextval('estado_seq'),
+  nombre VARCHAR(60) NOT NULL
+);
+
 -- 3) CLASIFICACION_SISMO
 CREATE TABLE IF NOT EXISTS clasificacion_sismo (
     nombre VARCHAR(100) PRIMARY KEY,
