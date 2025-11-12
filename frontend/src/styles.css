@@ -32,6 +32,16 @@ h1.title {
   margin-bottom: 15px;
 }
 
+.titulo-datos-sismicos {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 5px;
+}
+
 /* =====================================================
    📊 ESTILOS PARA TU TABLA (Agregado)
 ===================================================== */
@@ -185,6 +195,96 @@ h1.title {
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 10px 15px;
+}
+
+.bloque-series {
+  background: #f8fafc;              /* Fondo gris muy claro (consistente con .detalle-container) */
+  border: 1px solid #e2e8f0;        /* Borde suave */
+  border-radius: 10px;              /* Bordes redondeados igual que el resto */
+  padding: 20px 25px;               /* Espaciado interno */
+  margin-top: 20px;                 /* Separación superior */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Sombra ligera */
+  color: #1f2937;                   /* Color de texto uniforme */
+}
+
+.bloque-series h3 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 5px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.bloque-series .estacion-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.1s ease;
+}
+
+.bloque-series .estacion-item:hover {
+  transform: translateY(-2px);
+}
+
+.bloque-series .muestra-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.bloque-series .muestra-fecha {
+  font-style: italic;
+  color: #64748b;
+  font-size: 0.9em;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+}
+
+.bloque-series ul {
+  margin-left: 1rem;
+}
+
+.bloque-series li strong {
+  color: #334155;
+}
+
+.estacion-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.estacion-item h4 {
+  margin-top: 0;
+  color: #334155;
+}
+
+.muestra-item {
+  background: #f8fafc; /* Fondo ligeramente distinto */
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.muestra-fecha {
+  font-style: italic;
+  color: #64748b;
+  font-size: 0.9em;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 /* =====================================================
