@@ -56,6 +56,41 @@ export default function EventoDetalle({ evento, detalleEvento, onRechazar, isRej
         </p>
       </div>
 
+      <h3 className="titulo-datos-sismicos text-center">Series Temporales por Estación</h3>
+      <div className="bloque-series bg-light p-3 rounded mt-3">
+        {detalleEvento.seriesTemporales.length === 0 ? (
+          <p>No hay series temporales asociadas a este evento.</p>
+        ) : (
+          detalleEvento.seriesTemporales.map((estacion, i) => (
+            <div key={estacion.codigoEstacion} className="estacion-item mb-3">
+              <h4 className="text-primary fw-bold mb-2 text-center">
+                Estación código: {estacion.codigoEstacion}
+              </h4>
+
+              {estacion.muestrasSismicas.map((muestra, index) => (
+                <div key={index} className="muestra-item ms-3 mb-2">
+                  <p className="muestra-fecha">
+                    <strong>Muestra {index + 1}:</strong>{" "}
+                    {new Date(muestra.fechaHoraMuestra).toLocaleString()}
+                  </p>
+
+                  <ul className="list-unstyled ms-3">
+                    {muestra.detalles.map((detalle, dIndex) => (
+                      <li key={dIndex}>
+                        <strong>{detalle.tipoDeDato.denominacion}:</strong>{" "}
+                        {detalle.valor} {detalle.tipoDeDato.nombreUnidadMedida}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              {i !== detalleEvento.seriesTemporales.length - 1 && <hr />}
+            </div>
+          ))
+        )}
+      </div>
+
       {/* --- Botones de Herramientas --- */}
       <div className="acciones-secundarias">
         <button

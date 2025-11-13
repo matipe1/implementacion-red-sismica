@@ -29,9 +29,51 @@ public abstract class Estado {
         this.nombre = nombre;
     }
 
+    public void autoconfirmar() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede autoconfirmar desde este estado."
+        );
+    }
+
     public void autodetectar() {
         throw new UnsupportedOperationException(
             "El evento no se puede autodetectar desde este estado."
+        );
+    }
+
+    public void derivarASupervisor() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede derivar a supervisor desde este estado."
+        );
+    }
+
+    public void confirmar() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede confirmar desde este estado."
+        );
+    }
+
+    public void marcarSinRevision() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede marcar sin revisión desde este estado."
+        );
+    }
+
+    public void marcarPendienteDeCierre() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede marcar pendiente de cierre desde este estado."
+        );
+    }
+
+    public void marcarPendienteDeRevision() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede marcar pendiente de revisión desde este estado."
+        );
+    }
+
+    public void cerrar() {
+        throw new UnsupportedOperationException(
+            "El evento no se puede cerrar desde este estado."
         );
     }
 
